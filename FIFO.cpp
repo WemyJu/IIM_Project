@@ -17,7 +17,7 @@ FIFO::~FIFO(){}
 
 void FIFO::setOrder(){
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
-    for(int i; i<num; i++){
+    for(int i=0; i<num; i++){
         order[i]->setTimeS(timer);
         order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
         order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());

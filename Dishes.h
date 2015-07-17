@@ -26,9 +26,9 @@ class Dishes{
         int getTimeW();  // get waiting time
         int getNo();  // get NO.
         string getName();
+    protected:
         void setNo(int);
         void setTimeR(int);
-    protected:
         void setTimeS(int);
         void setTimeC(int);
         void setTimeW(int);

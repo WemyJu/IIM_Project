@@ -22,7 +22,7 @@ void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
                 dish = new Dish3;
                 break;
         }
-        dish->setNo(i);
+        dish->setNo(i+1);
         dish->setTimeR(0);
         dish->setTimeP();
         dish->setName();
