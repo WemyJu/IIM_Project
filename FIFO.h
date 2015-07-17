@@ -8,23 +8,19 @@
 #define FIFO_H
 
 #include <iostream>
-//#include <vector>
 #include <algorithm>
 #include "Algorithm.h"
-//#include "Dishes.h"
 
 using namespace std;
 
 class FIFO : public Algorithm{
     public:
-        FIFO();
+        FIFO(vector<Dishes*>, int);
         ~FIFO();
         static bool firstComeCmp(Dishes*, Dishes*);
         void setOrder();
         void printResult();
     private:
-        vector<Dishes*> order;
-        //int num;
         int timer;
 };
 

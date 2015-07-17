@@ -1,9 +1,9 @@
 GXX = g++
 
 all: Dishes.o Dish1.o Dish2.o Dish3.o Algorithm.o FIFO.o
-	$(GXX) simulate.cpp Dish1.o Dish2.o Dish3.o FIFO.o -o simulate
+	$(GXX) simulate.cpp Dishes.o Dish1.o Dish2.o Dish3.o Algorithm.o FIFO.o -o simulate
 
-Dishes.o: Dishes.h Dishes.o
+Dishes.o: Dishes.h Dishes.cpp
 	$(GXX) -c Dishes.cpp
 
 Dish1.o: Dishes.h Dish1.h Dish1.cpp

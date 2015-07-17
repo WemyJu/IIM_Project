@@ -6,12 +6,10 @@
 
 #include "Algorithm.h"
 
-Algorithm::Algorithm(int num){
-//void Algorithm::initOrders(vector<Dishes*> orders, int num){
-//void Algorithm::initOrders(int){
+void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
     srand(time(NULL));
-    
-    for(int i=0; i<num; i++){
+    n = rand()%10+10;
+    for(int i=0; i<n; i++){
         Dishes *dish;
         switch(rand()%3+1){
             case 1:
@@ -28,9 +26,8 @@ Algorithm::Algorithm(int num){
         dish->setTimeR(0);
         dish->setTimeP();
         dish->setName();
-        orders.push_back(dish);
+        ordering.push_back(dish);
     }
-
 }
 
 int Algorithm::getTotalWaiting(){
@@ -45,8 +42,8 @@ void Algorithm::getResult(vector<Dishes*> order){
     cout << "-------------------------------------------------\n";
     cout << " No.  Release  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)
-        cout << " " << setw(5) << order[i]->getNo()
-        << setw(9) << order[i]->getTimeR()
+        cout << " " << setw(2) << order[i]->getNo()
+        << setw(10) << order[i]->getTimeR()
         << setw(7) << order[i]->getTimeS()
         << setw(9) << order[i]->getTimeP()
         << setw(10) << order[i]->getTimeC()

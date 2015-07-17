@@ -6,25 +6,23 @@
 
 #include "FIFO.h"
 
-FIFO::FIFO(){
-    order = orders;
+FIFO::FIFO(vector<Dishes*> oriOrder, int n){
+    order = oriOrder;
+    num = n;
     timer = 0;
     totalWaiting = 0;
 }
 
-FIFO::~FIFO(){
-   /* for(int i=0; i<num; i++)
-        delete order[i];
-*/}
+FIFO::~FIFO(){}
 
 void FIFO::setOrder(){
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
     for(int i; i<num; i++){
-       /* order[i]->setTimeS(timer);
+        order[i]->setTimeS(timer);
         order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
         order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());
         timer += order[i]->getTimeP();
-        totalWaiting += order[i]->getTimeW();*/
+        totalWaiting += order[i]->getTimeW();
     }
     completeTime = timer;
 }
