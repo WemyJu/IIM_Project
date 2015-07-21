@@ -1,4 +1,4 @@
-GXX = g++
+GXX = g++ -std=c++11
 
 all: Dishes.o Dish1.o Dish2.o Dish3.o Algorithm.o FIFO.o
 	$(GXX) simulate.cpp Dishes.o Dish1.o Dish2.o Dish3.o Algorithm.o FIFO.o -o simulate

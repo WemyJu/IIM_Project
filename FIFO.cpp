@@ -18,11 +18,18 @@ FIFO::~FIFO(){}
 void FIFO::setOrder(){
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
     for(int i=0; i<num; i++){
-        order[i]->setTimeS(timer);
-        order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
-        order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());
-        timer += order[i]->getTimeP();
-        totalWaiting += order[i]->getTimeW();
+        while(true){
+            if(timer >= order[i]->getTimeR()){
+                order[i]->setTimeS(timer);
+                order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
+                order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());
+                timer += order[i]->getTimeP();
+                totalWaiting += order[i]->getTimeW();
+                break;
+            }
+            else
+                timer++;
+        }
     }
     completeTime = timer;
 }
