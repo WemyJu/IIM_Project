@@ -11,6 +11,7 @@
 #include "Dish3.h"
 #include "Algorithm.h"
 #include "FIFO.h"
+#include "MinProcessingTime.h"
 
 using namespace std;
 
@@ -22,4 +23,7 @@ int main(){
     FIFO fifo(order, numOfOrder);
     fifo.setOrder();
     fifo.printResult();
+    MinProcessingTime minTp(order, numOfOrder);
+    minTp.setOrder();
+    minTp.printResult();
 }

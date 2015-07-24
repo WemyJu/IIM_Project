@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <string>
-//#include "initOrder.h"
 
 using namespace std;
 
@@ -18,6 +17,7 @@ class Dishes{
         //friend void initilize(vector<Order>, int);
         friend class Algorithm;
         friend class FIFO;
+        friend class MinProcessingTime;
         //virtual ~Dishes() = 0;
         int getTimeS();  // get start time
         int getTimeP();  // get processing time

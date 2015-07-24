@@ -25,7 +25,8 @@ class Algorithm{
         int getCompleteTime();
         void getResult(vector<Dishes*>);
     protected:
-        int totalWaiting, completeTime, num;
+        int totalWaiting, completeTime; 
+        int num;
         vector<Dishes*> order;
 };
 

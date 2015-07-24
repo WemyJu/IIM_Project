@@ -35,7 +35,7 @@ void FIFO::setOrder(){
 }
 
 bool FIFO::firstComeCmp(Dishes* a, Dishes* b){
-    return a->release < b->release;
+    return a->getTimeR() < b->getTimeR();
 }
 
 void FIFO::printResult(){
