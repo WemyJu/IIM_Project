@@ -7,32 +7,43 @@
 #include "Algorithm.h"
 
 void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
-    int mu(5), nextTime(0);
+    int nextTime(0), order_num(0);
     srand(time(NULL));
-    n = rand()%10+10;
-    
-    default_random_engine generator(time(NULL));
-    poisson_distribution<int> distribution(mu);
+    n = rand()%10+30;
 
-    for(int i=0; i<n; i++){
-        Dishes *dish;
-        switch(rand()%3+1){
-            case 1:
-                dish = new Dish1;
-                break;
-            case 2:
-                dish = new Dish2;
-                break;
-            case 3:
-                dish = new Dish3;
-                break;
+    default_random_engine generator(time(NULL));
+    poisson_distribution<int> possion_dis(5);
+    normal_distribution<double> normal_dis(3, 1);
+
+    int Tr(0), table(1);
+    for(int i=0; i<n; table++){
+        do
+            order_num = (int)normal_dis(generator);
+        while(order_num <= 0);
+        Tr += possion_dis(generator);
+        for(int j=0; j<order_num; j++, i++){
+            Dishes *dish = new Dishes;
+            switch(rand()%3+1){
+                case 1:
+                    dish->setName("Dish No.1");
+                    dish->setTimeP(7);
+                    break;
+                case 2:
+                    dish->setName("Dish No.2");
+                    dish->setTimeP(9);
+                    break;
+                case 3:
+                    dish->setName("Dish No.3");
+                    dish->setTimeP(11);
+                    break;
+            }
+            dish->setTimeR(Tr);
+            dish->setNo(i+1);
+            dish->setTable(table);
+            ordering.push_back(dish);
         }
-        //nextTime += distribution(generator);
-        dish->setTimeR(distribution(generator));
-        dish->setNo(i+1);
-        dish->setTimeP();
-        dish->setName();
-        ordering.push_back(dish);
+        if(i>n)
+            n=i;
     }
 }
 
@@ -46,10 +57,11 @@ int Algorithm::getCompleteTime(){
 
 void Algorithm::getResult(vector<Dishes*> order){
     cout << "-------------------------------------------------\n";
-    cout << " No.  Release  Start  Process  Complete  Waiting \n";
+    cout << " No.  Table  Release  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)
-        cout << " " << setw(2) << order[i]->getNo()
-            << setw(10) << order[i]->getTimeR()
+        cout << " " << setw(3) << order[i]->getNo()
+            << setw(7) << order[i]->getTable()
+            << setw(9) << order[i]->getTimeR()
             << setw(7) << order[i]->getTimeS()
             << setw(9) << order[i]->getTimeP()
             << setw(10) << order[i]->getTimeC()

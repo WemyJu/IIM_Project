@@ -45,7 +45,10 @@ void MinProcessingTime::setOrder(){
 }
 
 bool MinProcessingTime::TpCmp(Dishes* a, Dishes* b){
-    return a->getTimeP() < b->getTimeP();
+    if(a->getTimeP() != b->getTimeP())
+        return a->getTimeP() < b->getTimeP();
+    else
+        return a->getTimeR() < b->getTimeR();
 }
 
 bool MinProcessingTime::TsCmp(Dishes* a, Dishes* b){

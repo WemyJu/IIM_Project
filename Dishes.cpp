@@ -30,6 +30,10 @@ int Dishes::getNo(){
     return No;
 }
 
+int Dishes::getTable(){
+    return table;
+}
+
 string Dishes::getName(){
     return name;
 }
@@ -54,3 +58,14 @@ void Dishes::setTimeW(int w){
     waiting = w;
 }
 
+void Dishes::setTimeP(int p){
+    process = p;
+}
+
+void Dishes::setTable(int t){
+    table = t;
+}
+
+void Dishes::setName(string n){
+    name = n;
+}

@@ -25,16 +25,18 @@ class Dishes{
         int getTimeR();  // get release time
         int getTimeW();  // get waiting time
         int getNo();  // get NO.
-        string getName();
+        int getTable();  // get table
+        string getName();  // get dish name
     protected:
-        void setNo(int);
         void setTimeR(int);
         void setTimeS(int);
         void setTimeC(int);
         void setTimeW(int);
-        virtual void setName() = 0;
-        virtual void setTimeP() = 0;
-        int process, start, release, complete, No, waiting;
+        void setTimeP(int);
+        void setNo(int);
+        void setTable(int);
+        void setName(string);
+        int process, start, release, complete, No, waiting, table;
         string name;
 };
 

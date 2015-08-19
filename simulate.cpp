@@ -6,9 +6,6 @@
 
 #include <iostream>
 #include "Dishes.h"
-#include "Dish1.h"
-#include "Dish2.h"
-#include "Dish3.h"
 #include "Algorithm.h"
 #include "FIFO.h"
 #include "MinProcessingTime.h"

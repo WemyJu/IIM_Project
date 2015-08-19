@@ -13,9 +13,6 @@
 #include <iomanip>
 #include <random>
 #include "Dishes.h"
-#include "Dish1.h"
-#include "Dish2.h"
-#include "Dish3.h"
 
 class Algorithm{
     public:
