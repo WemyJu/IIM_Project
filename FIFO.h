@@ -9,19 +9,21 @@
 
 #include <iostream>
 #include <algorithm>
+#include <cstring>
 #include "Algorithm.h"
 
 using namespace std;
 
 class FIFO : public Algorithm{
     public:
-        FIFO(vector<Dishes*>, int);
+        FIFO(vector<Dishes*>, int, int);
         ~FIFO();
         static bool firstComeCmp(Dishes*, Dishes*);
         void setOrder();
         void printResult();
     private:
-        int timer;
+        int clock, machine;
+        int *timer;
 };
 
 #endif

@@ -6,6 +6,19 @@
 
 #include "Dishes.h"
 
+int Dishes::machine = 0;
+int** Dishes::Tp = NULL;
+
+void Dishes::setProcessingTime(int **Tps){
+    Tp = Tps;
+}
+
+void Dishes::deleteTp(){
+    for(int i=0; i<machine; i++)
+        delete [] Tp[i];
+    delete Tp;
+}
+
 int Dishes::getTimeS(){
     return start;
 }
@@ -34,6 +47,18 @@ int Dishes::getTable(){
     return table;
 }
 
+int Dishes::getMachine(){
+    return machine;
+}
+
+int Dishes::getDishNo(){
+    return dishNo;
+}
+
+int Dishes::getMachineNo(){
+    return machineNo;
+}
+
 string Dishes::getName(){
     return name;
 }
@@ -58,12 +83,24 @@ void Dishes::setTimeW(int w){
     waiting = w;
 }
 
-void Dishes::setTimeP(int p){
-    process = p;
+void Dishes::setTimeP(int dish, int machine){
+    process = Tp[machine-1][dish-1];
 }
 
 void Dishes::setTable(int t){
     table = t;
+}
+
+void Dishes::setMachine(int m){
+    machine = m;
+}
+
+void Dishes::setDishNo(int no){
+    dishNo = no;
+}
+
+void Dishes::setMachineNo(int no){
+    machineNo = no;
 }
 
 void Dishes::setName(string n){

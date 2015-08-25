@@ -6,32 +6,45 @@
 
 #include "FIFO.h"
 
-FIFO::FIFO(vector<Dishes*> oriOrder, int n){
+FIFO::FIFO(vector<Dishes*> oriOrder, int n, int m){
     order = oriOrder;
     num = n;
-    timer = 0;
     totalWaiting = 0;
+    machine = m;
+    clock = 0;
+    timer = new int[machine+1];
+    memset(timer, 0, (machine+1)*sizeof(int));
 }
 
-FIFO::~FIFO(){}
+FIFO::~FIFO(){
+    delete [] timer;
+}
 
 void FIFO::setOrder(){
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
-    for(int i=0; i<num; i++){
-        while(true){
-            if(timer >= order[i]->getTimeR()){
-                order[i]->setTimeS(timer);
-                order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
-                order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());
-                timer += order[i]->getTimeP();
-                totalWaiting += order[i]->getTimeW();
-                break;
+    int i(0);
+    while(i<num){
+        for(int j=1; j<=machine && i<num; j++){
+            if(clock > timer[j]){
+                if(timer[j] >= order[i]->getTimeR()){
+                    order[i]->setTimeP(order[i]->getDishNo(), j);
+                    order[i]->setMachineNo(j);
+                    order[i]->setTimeS(timer[j]);
+                    order[i]->setTimeC(order[i]->getTimeS() + order[i]->getTimeP());
+                    order[i]->setTimeW(order[i]->getTimeC() - order[i]->getTimeR());
+                    timer[j] += order[i]->getTimeP();
+                    totalWaiting += order[i]->getTimeW();
+                    i++;
+                }
+                else
+                    timer[j]++;
+
+                if(timer[j] > completeTime)
+                    completeTime = timer[j];
             }
-            else
-                timer++;
         }
+        clock++;
     }
-    completeTime = timer;
 }
 
 bool FIFO::firstComeCmp(Dishes* a, Dishes* b){
