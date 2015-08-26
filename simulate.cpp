@@ -23,8 +23,8 @@ int main(){
     FIFO fifo(order, numOfOrder, machine);
     fifo.setOrder();
     fifo.printResult();
-    //MinProcessingTime minTp(order, numOfOrder);
-    //minTp.setOrder();
-    //minTp.printResult();
+    MinProcessingTime minTp(order, numOfOrder, machine);
+    minTp.setOrder();
+    minTp.printResult();
     Dishes::deleteTp();
 }

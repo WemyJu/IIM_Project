@@ -18,11 +18,14 @@ void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
 
     int Tr(0), table(1);
     for(int i=0; i<n; table++){
-        do
+        do 
             order_num = (int)normal_dis(generator);
         while(order_num <= 0);
         //Tr += possion_dis(generator);
-        Tr = normal_dis2(generator);
+        do 
+            Tr = normal_dis2(generator);
+        while(Tr<0);
+
         for(int j=0; j<order_num; j++, i++){
             Dishes *dish = new Dishes;
             switch(rand()%3+1){
