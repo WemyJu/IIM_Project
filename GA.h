@@ -17,13 +17,16 @@ using namespace std;
 
 class GA : public Algorithm{
     public:
-        GA(vector<Dishes*>, vector<Dishes*>, int, int);
+        GA(vector<Dishes>, vector<Dishes>, int, int);
         ~GA();
-        static bool initSort(Dishes*, Dishes*);
-        vector<Dishes*> setOrder();
+        static bool initSort(Dishes, Dishes);
+        vector<Dishes> setOrder();
         void printResult();
     private:
-        void init(vector<Dishes*>&, vector<Dishes*>&);
+        void init();
+        void crossOver();
+        void mutation();
+        vector<Dishes> p1, p2;
 };
 
 #endif

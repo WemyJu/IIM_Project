@@ -31,21 +31,21 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
             //Dishes *dish = new Dishes;
             switch(rand()%3+1){
                 case 1:
-                    dish->setName("Dish No.1");
-                    dish->setDishNo(1);
+                    dish.setName("Dish No.1");
+                    dish.setDishNo(1);
                     break;
                 case 2:
-                    dish->setName("Dish No.2");
-                    dish->setDishNo(2);
+                    dish.setName("Dish No.2");
+                    dish.setDishNo(2);
                     break;
                 case 3:
-                    dish->setName("Dish No.3");
-                    dish->setDishNo(3);
+                    dish.setName("Dish No.3");
+                    dish.setDishNo(3);
                     break;
             }
-            dish->setTimeR(Tr);
-            dish->setNo(i+1);
-            dish->setTable(table);
+            dish.setTimeR(Tr);
+            dish.setNo(i+1);
+            dish.setTable(table);
             ordering.push_back(dish);
         }
         if(i>n)
@@ -61,18 +61,18 @@ int Algorithm::getCompleteTime(){
     return completeTime;
 }
 
-void Algorithm::getResult(vector<Dishes*> order){
+void Algorithm::getResult(vector<Dishes> order){
     cout << "-----------------------------------------------------------------\n";
     cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)
-        cout << " " << setw(3) << order[i]->getNo()
-             << setw(7) << order[i]->getTable()
-             << setw(9) << order[i]->getTimeR()
-             << setw(9) << order[i]->getMachineNo()
-             << setw(7) << order[i]->getTimeS()
-             << setw(9) << order[i]->getTimeP()
-             << setw(10) << order[i]->getTimeC()
-             << setw(9) << order[i]->getTimeW() << endl;
+        cout << " " << setw(3) << order[i].getNo()
+             << setw(7) << order[i].getTable()
+             << setw(9) << order[i].getTimeR()
+             << setw(9) << order[i].getMachineNo()
+             << setw(7) << order[i].getTimeS()
+             << setw(9) << order[i].getTimeP()
+             << setw(10) << order[i].getTimeC()
+             << setw(9) << order[i].getTimeW() << endl;
     cout << "Total Waiting Time : " << totalWaiting << endl;
     cout << "Complete Time : " << completeTime << endl;
     cout << endl << endl;

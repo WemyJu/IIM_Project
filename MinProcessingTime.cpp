@@ -6,7 +6,7 @@
 
 #include "MinProcessingTime.h"
 
-MinProcessingTime::MinProcessingTime(vector<Dishes*> oriOrder, int n, int m){
+MinProcessingTime::MinProcessingTime(vector<Dishes> oriOrder, int n, int m){
     order = oriOrder;
     num = n;
     clock = 0;
@@ -20,7 +20,7 @@ MinProcessingTime::~MinProcessingTime(){
     delete [] timer;
 }
 
-vector<Dishes*> MinProcessingTime::setOrder(){
+vector<Dishes> MinProcessingTime::setOrder(){
     bool *dealed = new bool [num];
     memset(dealed, true, num);
     sort(order.begin(), order.end(), MinProcessingTime::TpCmp);
@@ -30,15 +30,15 @@ vector<Dishes*> MinProcessingTime::setOrder(){
             if(clock>=timer[k]){
                 bool deal(false);
                 for(int j=0; j<num; j++){
-                    if(dealed[j] && timer[k] >= order[j]->getTimeR()){
+                    if(dealed[j] && timer[k] >= order[j].getTimeR()){
                         dealed[j] = false;
-                        order[j]->setMachineNo(k);
-                        order[j]->setTimeS(timer[k]);
-                        order[j]->setTimeP(order[j]->getDishNo(), k);
-                        order[j]->setTimeC(order[j]->getTimeS() + order[j]->getTimeP());
-                        order[j]->setTimeW(order[j]->getTimeC() - order[j]->getTimeR());
-                        timer[k]+=order[j]->getTimeP();
-                        totalWaiting += order[j]->getTimeW();
+                        order[j].setMachineNo(k);
+                        order[j].setTimeS(timer[k]);
+                        order[j].setTimeP(order[j].getDishNo(), k);
+                        order[j].setTimeC(order[j].getTimeS() + order[j].getTimeP());
+                        order[j].setTimeW(order[j].getTimeC() - order[j].getTimeR());
+                        timer[k]+=order[j].getTimeP();
+                        totalWaiting += order[j].getTimeW();
                         deal = true;
                         break;
                     }
@@ -60,20 +60,20 @@ vector<Dishes*> MinProcessingTime::setOrder(){
     return order;
 }
 
-bool MinProcessingTime::TpCmp(Dishes* a, Dishes* b){
-    if(a->getTimeP() != b->getTimeP())
-        return a->getTimeP() < b->getTimeP();
+bool MinProcessingTime::TpCmp(Dishes a, Dishes b){
+    if(a.getTimeP() != b.getTimeP())
+        return a.getTimeP() < b.getTimeP();
     else
-        return a->getTimeR() < b->getTimeR();
+        return a.getTimeR() < b.getTimeR();
 }
 
-bool MinProcessingTime::TsCmp(Dishes* a, Dishes* b){
-    if(a->getTimeS() != b->getTimeS())
-        return a->getTimeS() < b->getTimeS();
-    else if(a->getTimeP() != b->getTimeP())
-        return a->getTimeP() < b->getTimeP();
+bool MinProcessingTime::TsCmp(Dishes a, Dishes b){
+    if(a.getTimeS() != b.getTimeS())
+        return a.getTimeS() < b.getTimeS();
+    else if(a.getTimeP() != b.getTimeP())
+        return a.getTimeP() < b.getTimeP();
     else
-        return a->getMachine() < b->getMachine();
+        return a.getMachine() < b.getMachine();
         
 }
 

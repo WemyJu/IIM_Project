@@ -20,16 +20,15 @@ int main(){
     machine = Machine::setMachine();
     //Machine::printProcessing();
     Algorithm::initOrder(order, numOfOrder);
-   /* 
+    
     FIFO fifo(order, numOfOrder, machine);
-    fifo.printResult();
     p1 = fifo.setOrder();
     fifo.printResult();
     
     MinProcessingTime minTp(order, numOfOrder, machine);
-    //p2 = minTp.setOrder();
+    p2 = minTp.setOrder();
     minTp.printResult();
-    */
+    
     //GA ga(p1, p2, numOfOrder, machine);
 
     Dishes::deleteTp();

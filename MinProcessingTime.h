@@ -16,11 +16,11 @@ using namespace std;
 
 class MinProcessingTime : Algorithm{
     public:
-        MinProcessingTime(vector<Dishes*>, int, int);
+        MinProcessingTime(vector<Dishes>, int, int);
         ~MinProcessingTime();
-        static bool TpCmp(Dishes*, Dishes*);
-        static bool TsCmp(Dishes*, Dishes*);
-        vector<Dishes*> setOrder();
+        static bool TpCmp(Dishes, Dishes);
+        static bool TsCmp(Dishes, Dishes);
+        vector<Dishes> setOrder();
         void printResult();
     private:
         int machine, clock;

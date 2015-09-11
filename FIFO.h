@@ -16,10 +16,10 @@ using namespace std;
 
 class FIFO : public Algorithm{
     public:
-        FIFO(vector<Dishes*>, int, int);
+        FIFO(vector<Dishes>, int, int);
         ~FIFO();
-        static bool firstComeCmp(Dishes*, Dishes*);
-        vector<Dishes*> setOrder();
+        static bool firstComeCmp(Dishes, Dishes);
+        vector<Dishes> setOrder();
         void printResult();
     private:
         int clock, machine;
