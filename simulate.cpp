@@ -14,17 +14,23 @@
 using namespace std;
 
 int main(){
-    vector<Dishes*> order;
+    vector<Dishes> order, p1, p2;
     int numOfOrder(0), machine(0);
 
     machine = Machine::setMachine();
     //Machine::printProcessing();
     Algorithm::initOrder(order, numOfOrder);
+   /* 
     FIFO fifo(order, numOfOrder, machine);
-    fifo.setOrder();
     fifo.printResult();
+    p1 = fifo.setOrder();
+    fifo.printResult();
+    
     MinProcessingTime minTp(order, numOfOrder, machine);
-    minTp.setOrder();
+    //p2 = minTp.setOrder();
     minTp.printResult();
+    */
+    //GA ga(p1, p2, numOfOrder, machine);
+
     Dishes::deleteTp();
 }

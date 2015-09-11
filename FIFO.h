@@ -19,7 +19,7 @@ class FIFO : public Algorithm{
         FIFO(vector<Dishes*>, int, int);
         ~FIFO();
         static bool firstComeCmp(Dishes*, Dishes*);
-        void setOrder();
+        vector<Dishes*> setOrder();
         void printResult();
     private:
         int clock, machine;

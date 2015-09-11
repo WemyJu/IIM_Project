@@ -18,14 +18,14 @@ class Algorithm{
     public:
         Algorithm(){};
         //~Algorithm();
-        static void initOrder(vector<Dishes*>&, int&);
+        static void initOrder(vector<Dishes>&, int&);
         int getTotalWaiting();
         int getCompleteTime();
-        void getResult(vector<Dishes*>);
+        void getResult(vector<Dishes>);
     protected:
         int totalWaiting, completeTime; 
         int num;
-        vector<Dishes*> order;
+        vector<Dishes> order;
 };
 
 #endif

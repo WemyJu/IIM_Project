@@ -20,7 +20,7 @@ FIFO::~FIFO(){
     delete [] timer;
 }
 
-void FIFO::setOrder(){
+vector<Dishes*> FIFO::setOrder(){
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
     int i(0);
     while(i<num){
@@ -45,6 +45,8 @@ void FIFO::setOrder(){
         }
         clock++;
     }
+
+    return order;
 }
 
 bool FIFO::firstComeCmp(Dishes* a, Dishes* b){

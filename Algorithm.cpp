@@ -6,7 +6,7 @@
 
 #include "Algorithm.h"
 
-void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
+void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
     int nextTime(0), order_num(0);
     srand(time(NULL));
     n = rand()%10+50;
@@ -17,6 +17,7 @@ void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
     normal_distribution<double> normal_dis2(60, 30);
 
     int Tr(0), table(1);
+    Dishes dish;
     for(int i=0; i<n; table++){
         do 
             order_num = (int)normal_dis(generator);
@@ -27,7 +28,7 @@ void Algorithm::initOrder(vector<Dishes*>& ordering, int& n){
         while(Tr<0);
 
         for(int j=0; j<order_num; j++, i++){
-            Dishes *dish = new Dishes;
+            //Dishes *dish = new Dishes;
             switch(rand()%3+1){
                 case 1:
                     dish->setName("Dish No.1");

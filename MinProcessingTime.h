@@ -20,7 +20,7 @@ class MinProcessingTime : Algorithm{
         ~MinProcessingTime();
         static bool TpCmp(Dishes*, Dishes*);
         static bool TsCmp(Dishes*, Dishes*);
-        void setOrder();
+        vector<Dishes*> setOrder();
         void printResult();
     private:
         int machine, clock;

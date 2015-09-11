@@ -20,7 +20,7 @@ MinProcessingTime::~MinProcessingTime(){
     delete [] timer;
 }
 
-void MinProcessingTime::setOrder(){
+vector<Dishes*> MinProcessingTime::setOrder(){
     bool *dealed = new bool [num];
     memset(dealed, true, num);
     sort(order.begin(), order.end(), MinProcessingTime::TpCmp);
@@ -56,6 +56,8 @@ void MinProcessingTime::setOrder(){
     delete [] dealed;
 
     sort(order.begin(), order.end(), MinProcessingTime::TsCmp);
+
+    return order;
 }
 
 bool MinProcessingTime::TpCmp(Dishes* a, Dishes* b){
