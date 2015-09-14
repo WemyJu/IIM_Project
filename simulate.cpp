@@ -6,10 +6,11 @@
 
 #include <iostream>
 #include "Dishes.h"
+#include "Machine.h"
 #include "Algorithm.h"
 #include "FIFO.h"
 #include "MinProcessingTime.h"
-#include "Machine.h"
+#include "GA.h"
 
 using namespace std;
 
@@ -29,7 +30,9 @@ int main(){
     p2 = minTp.setOrder();
     minTp.printResult();
     
-    //GA ga(p1, p2, numOfOrder, machine);
+    GA ga(p1, p2, numOfOrder, machine);
+    ga.setOrder();
+    ga.printResult();
 
     Dishes::deleteTp();
 }

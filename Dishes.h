@@ -15,10 +15,11 @@ using namespace std;
 class Dishes{
     public:
         //friend void initilize(vector<Order>, int);
+        friend class Machine;
         friend class Algorithm;
         friend class FIFO;
         friend class MinProcessingTime;
-        friend class Machine;
+        friend class GA;
         // ~Dishes();
         static void deleteTp();
         static int getMachine();  // get machine

@@ -1,7 +1,7 @@
 GXX = g++ -std=c++11
 
-all: Dishes.o Algorithm.o FIFO.o MinProcessingTime.o Machine.o
-	$(GXX) simulate.cpp Dishes.o Algorithm.o FIFO.o MinProcessingTime.o Machine.o -o simulate
+all: Dishes.o Algorithm.o Machine.o FIFO.o MinProcessingTime.o GA.o
+	$(GXX) simulate.cpp Dishes.o Machine.o Algorithm.o FIFO.o MinProcessingTime.o GA.o -o simulate
 
 Dishes.o: Dishes.h Dishes.cpp
 	$(GXX) -c Dishes.cpp
@@ -17,6 +17,9 @@ FIFO.o: Algorithm.h FIFO.h FIFO.cpp
 
 MinProcessingTime.o: Algorithm.h MinProcessingTime.h MinProcessingTime.cpp
 	$(GXX) -c MinProcessingTime.cpp
+
+GA.o: Algorithm.h GA.h GA.cpp
+	$(GXX) -c GA.cpp
 
 clean:
 	rm -rf *.o simulate
