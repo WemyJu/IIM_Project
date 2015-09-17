@@ -43,8 +43,8 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
                     dish.setDishNo(3);
                     break;
             }
-            //dish.setTimeR(Tr);
-            dish.setTimeR(0);
+            dish.setTimeR(Tr);
+            //dish.setTimeR(0);
             dish.setNo(i+1);
             dish.setTable(table);
             ordering.push_back(dish);

@@ -24,11 +24,12 @@ vector<Dishes> MinProcessingTime::setOrder(){
     bool *dealed = new bool [num];
     memset(dealed, true, num);
 
-    vector<Dishes> machineTpOrder[machine+1];
-    for(machineNo=1; machineNo<=machine; machineNo++){
-        machineTpOrder[machineNo] = order;
-        sort(machineTpOrder[machineNo].begin(), machineTpOrder[machineNo].end(), MinProcessingTime::TpCmp);
-        Algorithm::getResult(machineTpOrder[machineNo]);
+    vector<vector<Dishes>> machineTpOrder(machine+1);
+    for(int i=1; i<=machine; i++){
+        machineTpOrder[i] = order;
+        for(int j=0; j<num; j++)
+            machineTpOrder[i][j].setTimeP(machineTpOrder[i][j].getDishNo(), i);
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), MinProcessingTime::TpCmp);
     }
 
     int i(0);
@@ -37,15 +38,14 @@ vector<Dishes> MinProcessingTime::setOrder(){
             if(clock>=timer[k]){
                 bool deal(false);
                 for(int j=0; j<num; j++){
-                    if(dealed[j] && timer[k] >= order[j].getTimeR()){
+                    if(dealed[j] && timer[k] >= machineTpOrder[k][j].getTimeR()){
                         dealed[j] = false;
-                        order[j].setMachineNo(k);
-                        order[j].setTimeS(timer[k]);
-                        order[j].setTimeP(order[j].getDishNo(), k);
-                        order[j].setTimeC(order[j].getTimeS() + order[j].getTimeP());
-                        order[j].setTimeW(order[j].getTimeC() - order[j].getTimeR());
-                        timer[k]+=order[j].getTimeP();
-                        totalWaiting += order[j].getTimeW();
+                        machineTpOrder[k][j].setMachineNo(k);
+                        machineTpOrder[k][j].setTimeS(timer[k]);
+                        machineTpOrder[k][j].setTimeC(machineTpOrder[k][j].getTimeS() + machineTpOrder[k][j].getTimeP());
+                        machineTpOrder[k][j].setTimeW(machineTpOrder[k][j].getTimeC() - machineTpOrder[k][j].getTimeR());
+                        timer[k]+=machineTpOrder[k][j].getTimeP();
+                        totalWaiting += machineTpOrder[k][j].getTimeW();
                         deal = true;
                         break;
                     }
@@ -54,15 +54,28 @@ vector<Dishes> MinProcessingTime::setOrder(){
                     i++;
                 else
                     timer[k]++;
-                if(timer[k]>completeTime)
-                    completeTime = timer[k];
             }
         }
         clock++;
     }
-    delete [] dealed;
 
-   // sort(order.begin(), order.end(), MinProcessingTime::TsCmp);
+    for(int i=1; i<=machine; i++)
+        if(timer[i]>completeTime)
+            completeTime = timer[i];
+
+    for(int i=1; i<=machine; i++)
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), DishNoCmp);
+    sort(order.begin(), order.end(), DishNoCmp);
+
+    for(int i=0; i<num; i++)
+        for(int j=1; j<=machine; j++){
+            if(machineTpOrder[j][i].getTimeC() > 0){
+                order[i] = machineTpOrder[j][i];
+                break;
+            }
+        }
+
+    delete [] dealed;
 
     return order;
 }
@@ -82,6 +95,10 @@ bool MinProcessingTime::TsCmp(Dishes a, Dishes b){
     else
         return a.getMachineNo() < b.getMachineNo();
         
+}
+
+bool MinProcessingTime::DishNoCmp(Dishes a, Dishes b){
+    return a.getDishNo() < b.getDishNo();
 }
 
 void MinProcessingTime::printResult(){
