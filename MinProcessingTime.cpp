@@ -23,7 +23,14 @@ MinProcessingTime::~MinProcessingTime(){
 vector<Dishes> MinProcessingTime::setOrder(){
     bool *dealed = new bool [num];
     memset(dealed, true, num);
-    sort(order.begin(), order.end(), MinProcessingTime::TpCmp);
+
+    vector<Dishes> machineTpOrder[machine+1];
+    for(machineNo=1; machineNo<=machine; machineNo++){
+        machineTpOrder[machineNo] = order;
+        sort(machineTpOrder[machineNo].begin(), machineTpOrder[machineNo].end(), MinProcessingTime::TpCmp);
+        Algorithm::getResult(machineTpOrder[machineNo]);
+    }
+
     int i(0);
     while(i<num){
         for(int k=1; k<=machine && i<num; k++){
@@ -55,7 +62,7 @@ vector<Dishes> MinProcessingTime::setOrder(){
     }
     delete [] dealed;
 
-    sort(order.begin(), order.end(), MinProcessingTime::TsCmp);
+   // sort(order.begin(), order.end(), MinProcessingTime::TsCmp);
 
     return order;
 }
@@ -73,7 +80,7 @@ bool MinProcessingTime::TsCmp(Dishes a, Dishes b){
     else if(a.getTimeP() != b.getTimeP())
         return a.getTimeP() < b.getTimeP();
     else
-        return a.getMachine() < b.getMachine();
+        return a.getMachineNo() < b.getMachineNo();
         
 }
 

@@ -25,6 +25,7 @@ class MinProcessingTime : Algorithm{
     private:
         int machine, clock;
         int *timer;
+        int machineNo;
 };
 
 #endif

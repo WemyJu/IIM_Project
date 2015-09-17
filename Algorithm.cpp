@@ -13,7 +13,7 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
 
     default_random_engine generator(time(NULL));
     poisson_distribution<int> possion_dis(5);
-    normal_distribution<double> normal_dis(3, 1);
+    normal_distribution<double> normal_dis(6, 2);
     normal_distribution<double> normal_dis2(60, 30);
 
     int Tr(0), table(1);
@@ -43,7 +43,8 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
                     dish.setDishNo(3);
                     break;
             }
-            dish.setTimeR(Tr);
+            //dish.setTimeR(Tr);
+            dish.setTimeR(0);
             dish.setNo(i+1);
             dish.setTable(table);
             ordering.push_back(dish);
