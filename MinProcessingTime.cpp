@@ -38,8 +38,8 @@ vector<Dishes> MinProcessingTime::setOrder(){
             if(clock>=timer[k]){
                 bool deal(false);
                 for(int j=0; j<num; j++){
-                    if(dealed[j] && timer[k] >= machineTpOrder[k][j].getTimeR()){
-                        dealed[j] = false;
+                    if(dealed[machineTpOrder[k][j].getNo()-1] && timer[k] >= machineTpOrder[k][j].getTimeR()){
+                        dealed[machineTpOrder[k][j].getNo()-1] = false;
                         machineTpOrder[k][j].setMachineNo(k);
                         machineTpOrder[k][j].setTimeS(timer[k]);
                         machineTpOrder[k][j].setTimeC(machineTpOrder[k][j].getTimeS() + machineTpOrder[k][j].getTimeP());
@@ -62,7 +62,6 @@ vector<Dishes> MinProcessingTime::setOrder(){
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
-
     for(int i=1; i<=machine; i++)
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), DishNoCmp);
     sort(order.begin(), order.end(), DishNoCmp);
@@ -74,7 +73,6 @@ vector<Dishes> MinProcessingTime::setOrder(){
                 break;
             }
         }
-
     delete [] dealed;
 
     return order;
