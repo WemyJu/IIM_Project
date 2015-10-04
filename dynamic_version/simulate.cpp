@@ -1,0 +1,64 @@
+//
+// IIM project
+// simulate.cpp
+// Created by Wemy Ju on 16/07/2015.
+//
+
+#include <iostream>
+#include "Dishes.h"
+#include "Machine.h"
+#include "Algorithm.h"
+#include "FIFO.h"
+#include "MinProcessingTime.h"
+#include "GA.h"
+
+using namespace std;
+
+bool timeRCmp(Dishes a, Dishes b){
+    return a.getTimeR() < b.getTimeR();
+}
+
+int main(){
+    vector<Dishes> order, fifoResult, minProResult, GAResult, p1, p2;
+    int numOfOrder(0), machine(0), clock(0);
+    bool fifoEnd(false), minProEnd(false), GAEnd(false); 
+
+    machine = Machine::setMachine();
+    //Machine::printProcessing();
+    Algorithm::initOrder(order, numOfOrder);
+    sort(order.begin(), order.end(), timeRCmp);
+   
+    FIFO fifo(machine, numOfOrder);
+//    MinProcessingTime minPro(machine);
+//    GA ga(machine);
+    while(!fifoEnd || !minProEnd || !GAEnd || !order.empty()){
+        while(clock >= order.begin()->getTimeR() && !order.empty()){
+            Dishes dish = *(order.begin());
+            fifo.addOrder(clock, dish);
+            //minPro.addOrder(clock, dish);
+            //ga.addOrder(clock, dish);
+            order.erase(order.begin());
+        }
+        fifoEnd = fifo.checkSchedule(clock);
+        // minProEnd = minPro.checkSchedule(clock);
+        // GAEnd = ga.checkSchedule(clock);
+        minProEnd = true;
+        GAEnd = true;
+        clock++;
+    }
+    fifo.printResult();
+    // minPro.printResult();
+    // ga.printResult();
+
+
+/*
+        MinProcessingTime minTp(order, numOfOrder, machine);
+        p2 = minTp.setOrder();
+        minTp.printResult();
+
+        GA ga(p1, p2, numOfOrder, machine);
+        ga.setOrder();
+        ga.printResult();*/
+
+    Dishes::deleteTp();
+}
