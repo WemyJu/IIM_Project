@@ -29,36 +29,25 @@ int main(){
     sort(order.begin(), order.end(), timeRCmp);
    
     FIFO fifo(machine, numOfOrder);
-//    MinProcessingTime minPro(machine);
+    MinProcessingTime minPro(machine, numOfOrder);
 //    GA ga(machine);
     while(!fifoEnd || !minProEnd || !GAEnd || !order.empty()){
         while(clock >= order.begin()->getTimeR() && !order.empty()){
             Dishes dish = *(order.begin());
             fifo.addOrder(clock, dish);
-            //minPro.addOrder(clock, dish);
+            minPro.addOrder(clock, dish);
             //ga.addOrder(clock, dish);
             order.erase(order.begin());
         }
         fifoEnd = fifo.checkSchedule(clock);
-        // minProEnd = minPro.checkSchedule(clock);
+        minProEnd = minPro.checkSchedule(clock);
         // GAEnd = ga.checkSchedule(clock);
-        minProEnd = true;
         GAEnd = true;
         clock++;
     }
     fifo.printResult();
-    // minPro.printResult();
+     minPro.printResult();
     // ga.printResult();
-
-
-/*
-        MinProcessingTime minTp(order, numOfOrder, machine);
-        p2 = minTp.setOrder();
-        minTp.printResult();
-
-        GA ga(p1, p2, numOfOrder, machine);
-        ga.setOrder();
-        ga.printResult();*/
 
     Dishes::deleteTp();
 }
