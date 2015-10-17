@@ -62,17 +62,19 @@ vector<Dishes> MinProcessingTime::setOrder(){
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
+
     for(int i=1; i<=machine; i++)
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), DishNoCmp);
     sort(order.begin(), order.end(), DishNoCmp);
 
     for(int i=0; i<num; i++)
         for(int j=1; j<=machine; j++){
-            if(machineTpOrder[j][i].getTimeC() > 0){
+            if(machineTpOrder[j][i].getMachineNo() > 0){
                 order[i] = machineTpOrder[j][i];
                 break;
             }
         }
+
     delete [] dealed;
 
     return order;

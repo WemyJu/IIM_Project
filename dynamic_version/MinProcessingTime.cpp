@@ -7,7 +7,6 @@
 #include "MinProcessingTime.h"
 
 MinProcessingTime::MinProcessingTime(int m, int n){
-    cout << "in constructor\n";
     num = n;
     totalWaiting = 0;
     completeTime = 0;
@@ -65,14 +64,10 @@ void MinProcessingTime::addOrder(int timer, Dishes newDish){
 }
 
 bool MinProcessingTime::checkSchedule(int clock){
-    cout << "in checkSchedule\n";
     for(int i=1; i<=machine; i++){
-        cout << "in for 1\n";
         if(clock >= timer[i]){
             bool deal(false);
             if(!machineTpOrder[i].empty()){
-                //cout << timer[i] << endl;
-                cout << "in if 1\n";
                 for(int j=0; j<machineTpOrder[i].size(); j++){
                     if(!dealed[machineTpOrder[i][j].getNo()]){
                         if(clock>=machineTpOrder[i][j].getTimeR()){
@@ -82,7 +77,6 @@ bool MinProcessingTime::checkSchedule(int clock){
                             machineTpOrder[i][j].setTimeC(machineTpOrder[i][j].getTimeS()+machineTpOrder[i][j].getTimeP());
                             machineTpOrder[i][j].setTimeW(machineTpOrder[i][j].getTimeC() - machineTpOrder[i][j].getTimeR());
                             timer[i]+=machineTpOrder[i][j].getTimeP();
-                            cout <<"timer["<<i<<"] = " << timer[i] << endl;
                             totalWaiting += machineTpOrder[i][j].getTimeW();
                             deal = true;
                             result.insert(result.end(), machineTpOrder[i][j]);
@@ -95,17 +89,14 @@ bool MinProcessingTime::checkSchedule(int clock){
                     }
                 }
             }
-            if(!deal){
-                cout << "timer++, time = " << timer[i] << endl;
+            if(!deal)
                 timer[i]++;
-            }
         }
     }
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
 
-    cout << "after checkSchedule\n";
     for(int i=1; i<=machine; i++)
         if(!machineTpOrder[i].empty())
             return false;

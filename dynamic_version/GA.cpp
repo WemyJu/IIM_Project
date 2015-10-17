@@ -6,7 +6,7 @@
 
 #include "GA.h"
 
-GA::GA(vector<Dishes> par1, vector<Dishes> par2, int n, int m){
+GA::GA(int m, int n){
     p1 = par1;
     p2 = par2;
     num = n;
