@@ -7,13 +7,17 @@
 #include "GA.h"
 
 GA::GA(int m, int n){
-    p1 = par1;
-    p2 = par2;
     num = n;
     machine = m;
     totalWaiting = 0;
     completeTime = 0;
     order.clear();
+    result.clear();
+    timer = new int [machine+1];
+    memset(timer, 0, (machine+1)*sizeof(int));
+    p1.clear();
+    p2.clear();
+
     init();
 }
 
@@ -43,6 +47,13 @@ bool GA::initSort(Dishes a, Dishes b){
         return a.getMachineNo() < b.getMachineNo();
     else
         return a.getTimeS() < b.getTimeS();
+}
+
+void GA::addOrder(int timer, Dishes newDish){
+    order.insert(order.end(), newDish);
+    sort(p1.begin(), p1.end(), firstComeCmp);
+    p1 = fifo(order);
+    p2 = minProcess(order);
 }
 
 vector<Dishes> GA::setOrder(){
@@ -125,4 +136,94 @@ bool GA::resultSort(Dishes a, Dishes b){
         return a.getTable() < b.getTable();
     else
         return a.getTimeS() < b.getTimeS();
+}
+
+vector<Dishes> fifo(vector<Dishes> order_for_fifo){
+    sort(order_for_fifo.begin(), order_for_fifo.end(), GA::firstComeCmp);
+    int i(0);
+    while(i<num){
+        for(int j=1; j<=machine && i<num; j++){
+            if(clock > timer[j]){
+                if(timer[j] >= order_for_fifo[i].getTimeR()){
+                    order_for_fifo[i].setTimeP(order_for_fifo[i].getDishNo(), j);
+                    order_for_fifo[i].setMachineNo(j);
+                    order_for_fifo[i].setTimeS(timer[j]);
+                    order_for_fifo[i].setTimeC(order_for_fifo[i].getTimeS() + order_for_fifo[i].getTimeP());
+                    order_for_fifo[i].setTimeW(order_for_fifo[i].getTimeC() - order_for_fifo[i].getTimeR());
+                    timer[j] += order_for_fifo[i].getTimeP();
+                    totalWaiting += order_for_fifo[i].getTimeW();
+                    i++;
+                }
+                else
+                    timer[j]++;
+            }
+        }
+        clock++;
+    }
+    
+    return order;
+}
+
+bool GA::firstComeCmp(Dishes a, Dishes b){
+    return a.getTimeR() < b.getTimeR();
+}
+
+vector<Dishes> minProcess(vector<Dishes>){
+    bool *dealed = new bool [num];
+    memset(dealed, true, num);
+    
+    vector<vector<Dishes>> machineTpOrder(machine+1);
+    for(int i=1; i<=machine; i++){
+        machineTpOrder[i] = order;
+        for(int j=0; j<num; j++)
+            machineTpOrder[i][j].setTimeP(machineTpOrder[i][j].getDishNo(), i);
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), MinProcessingTime::TpCmp);
+    }
+    
+    int i(0);
+    while(i<num){
+        for(int k=1; k<=machine && i<num; k++){
+            if(clock>=timer[k]){
+                bool deal(false);
+                for(int j=0; j<num; j++){
+                    if(dealed[machineTpOrder[k][j].getNo()-1] && timer[k] >= machineTpOrder[k][j].getTimeR()){
+                        dealed[machineTpOrder[k][j].getNo()-1] = false;
+                        machineTpOrder[k][j].setMachineNo(k);
+                        machineTpOrder[k][j].setTimeS(timer[k]);
+                        machineTpOrder[k][j].setTimeC(machineTpOrder[k][j].getTimeS() + machineTpOrder[k][j].getTimeP());
+                        machineTpOrder[k][j].setTimeW(machineTpOrder[k][j].getTimeC() - machineTpOrder[k][j].getTimeR());
+                        timer[k]+=machineTpOrder[k][j].getTimeP();
+                        totalWaiting += machineTpOrder[k][j].getTimeW();
+                        deal = true;
+                        break;
+                    }
+                }
+                if(deal)
+                    i++;
+                else
+                    timer[k]++;
+            }
+        }
+        clock++;
+    }
+    
+    for(int i=1; i<=machine; i++)
+        if(timer[i]>completeTime)
+            completeTime = timer[i];
+    
+    for(int i=1; i<=machine; i++)
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), DishNoCmp);
+    sort(order.begin(), order.end(), DishNoCmp);
+    
+    for(int i=0; i<num; i++)
+        for(int j=1; j<=machine; j++){
+            if(machineTpOrder[j][i].getMachineNo() > 0){
+                order[i] = machineTpOrder[j][i];
+                break;
+            }
+        }
+    
+    delete [] dealed;
+    
+    return order;
 }

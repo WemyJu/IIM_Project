@@ -18,7 +18,7 @@ class Algorithm{
     public:
         Algorithm(){};
         //~Algorithm();
-        static void initOrder(vector<Dishes>&, int&);
+        static void initOrder(vector<Dishes>&, int&, int&);
         int getTotalWaiting();
         int getCompleteTime();
         void getResult(vector<Dishes>);

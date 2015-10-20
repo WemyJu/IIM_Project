@@ -16,11 +16,11 @@ using namespace std;
 
 int main(){
     vector<Dishes> order, p1, p2;
-    int numOfOrder(0), machine(0);
+    int numOfOrder(0), machine(0), dish(0);
 
-    machine = Machine::setMachine();
+    Machine::setMachine(machine, dish);
     //Machine::printProcessing();
-    Algorithm::initOrder(order, numOfOrder);
+    Algorithm::initOrder(order, numOfOrder, dish);
     
     FIFO fifo(order, numOfOrder, machine);
     p1 = fifo.setOrder();

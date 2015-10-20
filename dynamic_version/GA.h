@@ -30,6 +30,8 @@ class GA : public Algorithm{
         void crossOver();
         void mutation();
         void swap(int, int);
+        vector<Dishes> fifo(vector<Dishes>);
+        vector<Dishes> minProcess(vector<Dishes>);
         int machine;
         vector<Dishes> p1, p2;
 };

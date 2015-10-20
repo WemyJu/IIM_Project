@@ -9,7 +9,7 @@
 int Machine::machineNum = 0;
 int Machine::dishNum = 0;
 
-int Machine::setMachine(){
+void Machine::setMachine(int &machine, int &dish){
     fstream fp;
     int Tp;
     int **Tps;
@@ -23,11 +23,11 @@ int Machine::setMachine(){
             fp >> Tps[i][j];
     }
 
+    machine = machineNum;
+    dish = dishNum;
     Dishes::setMachine(machineNum);
     Dishes::setProcessingTime(Tps);
-    
     tempTp = Tps;
-    return machineNum;
 }
 
 void Machine::printProcessing(){
