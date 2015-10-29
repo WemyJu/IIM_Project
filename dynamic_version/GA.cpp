@@ -225,9 +225,13 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     int size = order_for_mp.size();
     bool *dealed = new bool [num];
     memset(dealed, true, num);
+    for(int i = 0; i<order_for_mp.size(); i++)
+        order_for_mp[i].setMachineNo(0);
+    
     int *timer = new int [machine+1];
     for(int i=0; i<=machine; i++)
         timer[i] = clock;
+    
     vector<vector<Dishes>> machineTpOrder(machine+1);
     for(int i=1; i<=machine; i++){
         machineTpOrder[i].clear();
@@ -238,14 +242,14 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     }
    
     int i(0);
-    int tempCount(0);
     while(i<order_for_mp.size()){
-        ++tempCount;
         for(int k=1; k<=machine && i<order_for_mp.size(); k++){
             if(clock>=timer[k]){
+                cout << "c= " << clock << "t[" << k << "]= "<< timer[k] << endl;
                 bool deal(false);
                 for(int j=0; j<order_for_mp.size(); j++){
                     if(dealed[machineTpOrder[k][j].getNo()-1] && timer[k] >= machineTpOrder[k][j].getTimeR()){
+                        cout << "k= "<<k << " j=" << j << endl;
                         dealed[machineTpOrder[k][j].getNo()-1] = false;
                         machineTpOrder[k][j].setMachineNo(k);
                         machineTpOrder[k][j].setTimeS(timer[k]);
@@ -256,32 +260,28 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
                         break;
                     }
                 }
-                if(deal){
+                if(deal)
                     i++;
-                }
-                else{
+                else
                     timer[k]++;
-                }
             }
         }
         clock++;
     }
-    
-    //cout <<"first for\n";
+
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
     
-    //cout << "second for\n";
     for(int i=1; i<=machine; i++)
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), dishNoCmp);
     sort(order.begin(), order.end(), dishNoCmp);
     
-    //cout << "third for\n";
     for(int i=0; i<order_for_mp.size(); i++)
         for(int j=1; j<=machine; j++){
             if(machineTpOrder[j][i].getMachineNo() > 0 && machineTpOrder[j][i].getMachineNo() <= machine){
-                order[i] = machineTpOrder[j][i];
+                cout << machineTpOrder[1][i].getMachineNo() << " " << machineTpOrder[2][i].getMachineNo() << " " << machineTpOrder[3][i].getMachineNo() << endl;
+                order_for_mp[i] = machineTpOrder[j][i];
                 break;
             }
         }
