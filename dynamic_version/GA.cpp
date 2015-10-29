@@ -189,13 +189,12 @@ bool GA::resultSort(Dishes a, Dishes b){
 }
 
 vector<Dishes> GA::fifo(int clock, vector<Dishes> order_for_fifo){
-    cout << "in fifo\n";
     sort(order_for_fifo.begin(), order_for_fifo.end(), GA::firstComeCmp);
     int i(0);
     int *timer = new int [machine+1];
-    memset(timer, clock, (machine+1)*sizeof(int));
+    for(int i=0; i<=machine; i++)
+        timer[i] = clock;
     while(i<order_for_fifo.size()){
-        cout << "in while\n";
         for(int j=1; j<=machine && i<order_for_fifo.size(); j++){
             if(clock >= timer[j]){
                 if(timer[j] >= order_for_fifo[i].getTimeR()){
@@ -227,7 +226,8 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     bool *dealed = new bool [num];
     memset(dealed, true, num);
     int *timer = new int [machine+1];
-    memset(timer, clock, (machine+1)*sizeof(int));
+    for(int i=0; i<=machine; i++)
+        timer[i] = clock;
     vector<vector<Dishes>> machineTpOrder(machine+1);
     for(int i=1; i<=machine; i++){
         machineTpOrder[i].clear();
