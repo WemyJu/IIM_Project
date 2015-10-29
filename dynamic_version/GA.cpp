@@ -39,11 +39,10 @@ void GA::init(){
         it = p1.insert(it, dish);
     }
 */
-    int tempnum = num;
-    num = p1.size();
-    cout << "p1\n";
-    Algorithm::getResult(p1);
-    //cout << "after p1\n";
+    //int tempnum = num;
+   // num = p1.size();
+    //cout << "p1\n";
+    //Algorithm::getResult(p1);
 
    /* for(it=p2.begin(), i=1; i<=machine; i++, it++){
         while(it!=p2.end() && it->getMachineNo() == i){
@@ -52,13 +51,11 @@ void GA::init(){
         }
         it = p2.insert(it, dish);
     }*/
-    number = order.size()+machine;
 
-
-    num = p2.size();
-    cout << "p2\n";
-    Algorithm::getResult(p2);
-    num = tempnum;
+    //num = p2.size();
+    //cout << "p2\n";
+    //Algorithm::getResult(p2);
+    //num = tempnum;
 }
 
 bool GA::initSort(Dishes a, Dishes b){
@@ -69,12 +66,11 @@ bool GA::initSort(Dishes a, Dishes b){
 }
 
 void GA::addOrder(int timer, Dishes newDish){
-    //cout << "in addOrder\n";
     order.insert(order.end(), newDish);
     p1 = fifo(timer, order);
     p2 = minProcess(timer, order);
     init();
-    //crossOver();
+    crossOver();
     //mutation();
 }
 
@@ -135,12 +131,13 @@ bool GA::checkSchedule(int clock){
 }
 
 void GA::crossOver(){
-    vector<Dishes>::iterator it=p2.begin();
-    vector<Dishes>::iterator it2;
+    vector<Dishes>::iterator it=order.begin();
+    //vector<Dishes>::iterator it2;
     bool *dealed = new bool [num+1];
     memset(dealed, false, num+1);
+    int usedNum(0), pastMachine(1);
     
-    for(int count=0; count<machine-1; count++, it++)
+    /*for(int count=0; count<machine-1; count++, it++)
         while(it->getMachineNo()!=0) it++;
 
     for( ; it!=p2.end(); it++){
@@ -155,6 +152,40 @@ void GA::crossOver(){
         else
             if(dealed[it->getNo()] == false)
                 it2 = order.insert(it2, *it);
+    }*/
+
+    order.clear();
+
+    for(int i=0; i<p2.size(); i++)
+        if(p2[i].getMachineNo()==machine){
+            order.push_back(p2[i]);
+            dealed[p2[i].getNo()] = true;
+        }
+
+    for(int i=0; i<p1.size(); i++){
+        if(p1[i].getMachineNo()==pastMachine){
+            if(!dealed[p1[i].getNo()]){
+                it = order.insert(it, p1[i]);
+                it++;
+                dealed[p1[i].getNo()] = true;
+            }
+            else
+                usedNum++;
+        }
+        else{
+            if(usedNum>0)
+                usedNum--;
+            else
+                pastMachine++;
+            if(!dealed[p1[i].getNo()]){
+                p1[i].setMachineNo(pastMachine);
+                it = order.insert(it, p1[i]);
+                it++;
+                dealed[p1[i].getNo()] = true;
+            }
+            else
+                usedNum++;
+        }
     }
 }
 
@@ -221,7 +252,6 @@ bool GA::firstComeCmp(Dishes a, Dishes b){
 }
 
 vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
-    cout << "in minProcess\n";
     int size = order_for_mp.size();
     bool *dealed = new bool [num];
     memset(dealed, true, num);
@@ -245,11 +275,9 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     while(i<order_for_mp.size()){
         for(int k=1; k<=machine && i<order_for_mp.size(); k++){
             if(clock>=timer[k]){
-                cout << "c= " << clock << "t[" << k << "]= "<< timer[k] << endl;
                 bool deal(false);
                 for(int j=0; j<order_for_mp.size(); j++){
                     if(dealed[machineTpOrder[k][j].getNo()-1] && timer[k] >= machineTpOrder[k][j].getTimeR()){
-                        cout << "k= "<<k << " j=" << j << endl;
                         dealed[machineTpOrder[k][j].getNo()-1] = false;
                         machineTpOrder[k][j].setMachineNo(k);
                         machineTpOrder[k][j].setTimeS(timer[k]);
@@ -280,7 +308,6 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     for(int i=0; i<order_for_mp.size(); i++)
         for(int j=1; j<=machine; j++){
             if(machineTpOrder[j][i].getMachineNo() > 0 && machineTpOrder[j][i].getMachineNo() <= machine){
-                cout << machineTpOrder[1][i].getMachineNo() << " " << machineTpOrder[2][i].getMachineNo() << " " << machineTpOrder[3][i].getMachineNo() << endl;
                 order_for_mp[i] = machineTpOrder[j][i];
                 break;
             }

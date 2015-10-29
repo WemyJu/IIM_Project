@@ -37,7 +37,7 @@ class GA : public Algorithm{
         void swap(int, int);
         vector<Dishes> fifo(int, vector<Dishes>);
         vector<Dishes> minProcess(int, vector<Dishes>);
-        int machine, number;
+        int machine;
         vector<Dishes> p1, p2;
         int *gaTimer;
 };

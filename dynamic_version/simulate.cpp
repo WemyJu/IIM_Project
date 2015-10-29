@@ -42,12 +42,12 @@ int main(){
         fifoEnd = fifo.checkSchedule(clock);
         minProEnd = minPro.checkSchedule(clock);
         GAEnd = ga.checkSchedule(clock);
-        GAEnd = true;
+     //   GAEnd = true;
         clock++;
     }
-    // fifo.printResult();
-    // minPro.printResult();
-    // ga.printResult();
+     fifo.printResult();
+     minPro.printResult();
+     ga.printResult();
 
     Dishes::deleteTp();
 }
