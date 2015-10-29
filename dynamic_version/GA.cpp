@@ -13,12 +13,10 @@ GA::GA(int m, int n){
     completeTime = 0;
     order.clear();
     result.clear();
-    timer = new int [machine+1];
-    memset(timer, 0, (machine+1)*sizeof(int));
     p1.clear();
     p2.clear();
-
-    init();
+    gaTimer = new int [machine+1];
+    memset(gaTimer, 0, (machine+1)*sizeof(int));
 }
 
 GA::~GA(){};
@@ -27,19 +25,40 @@ void GA::init(){
     sort(p1.begin(), p1.end(), GA::initSort);
     sort(p2.begin(), p2.end(), GA::initSort);
    
-    Dishes dish;
+   /* Dishes dish;
     dish.setMachineNo(0);
     vector<Dishes>::iterator it;
     int i;
+    
     for(it=p1.begin(), i=1; i<=machine; i++, it++){
-        while(it->getMachineNo() == i) it++;
+        while(it!= p1.end() && it->getMachineNo() == i){
+            
+            //cout << it->getNo() << " " << it->getMachineNo() <<  endl;
+            it++;
+        }
         it = p1.insert(it, dish);
     }
-    for(it=p2.begin(), i=1; i<=machine; i++, it++){
-        while(it->getMachineNo() == i) it++;
+*/
+    int tempnum = num;
+    num = p1.size();
+    cout << "p1\n";
+    Algorithm::getResult(p1);
+    //cout << "after p1\n";
+
+   /* for(it=p2.begin(), i=1; i<=machine; i++, it++){
+        while(it!=p2.end() && it->getMachineNo() == i){
+            //cout << it->getNo() << " " << it->getMachineNo() <<  endl;
+            it++;
+        }
         it = p2.insert(it, dish);
-    }
-    num += machine;
+    }*/
+    number = order.size()+machine;
+
+
+    num = p2.size();
+    cout << "p2\n";
+    Algorithm::getResult(p2);
+    num = tempnum;
 }
 
 bool GA::initSort(Dishes a, Dishes b){
@@ -50,16 +69,16 @@ bool GA::initSort(Dishes a, Dishes b){
 }
 
 void GA::addOrder(int timer, Dishes newDish){
+    //cout << "in addOrder\n";
     order.insert(order.end(), newDish);
-    sort(p1.begin(), p1.end(), firstComeCmp);
-    p1 = fifo(order);
-    p2 = minProcess(order);
+    p1 = fifo(timer, order);
+    p2 = minProcess(timer, order);
+    init();
+    //crossOver();
+    //mutation();
 }
 
 vector<Dishes> GA::setOrder(){
-    crossOver();
-    //mutation();
-
     vector<Dishes>::iterator it=order.begin();
     int timer;
     for(int i=1; i<=machine; i++){
@@ -81,6 +100,38 @@ vector<Dishes> GA::setOrder(){
     num-=machine;
 
     return order;
+}
+
+bool GA::checkSchedule(int clock){
+    for(int i=1; i<=machine; i++){
+        //cout << "clock = " << clock << "  i = " << i << " t = " << gaTimer[i] << endl;
+        if(clock >= gaTimer[i]){
+            vector<Dishes>::iterator it;
+            for(it=order.begin(); it!=order.end(); it++){
+                bool match(false);
+                if(it->getMachineNo() == i){
+                    match = true;
+                    if(clock >= it->getTimeR()){
+                        Dishes dish = (*it);
+                        dish.setTimeS(clock);
+                        dish.setMachineNo(i);
+                        dish.setTimeP(dish.getDishNo(), i);
+                        dish.setTimeC(dish.getTimeS()+dish.getTimeP());
+                        dish.setTimeW(dish.getTimeC()-dish.getTimeR());
+                        gaTimer[i]=dish.getTimeC();
+                        totalWaiting += dish.getTimeW();
+                        if(dish.getTimeC() > completeTime)
+                            completeTime = dish.getTimeC();
+                        it = order.erase(it);
+                        result.insert(result.end(), dish);
+                    }
+                }
+                if(match)
+                    break;
+            }
+        }
+    }
+    return order.empty();
 }
 
 void GA::crossOver(){
@@ -105,7 +156,6 @@ void GA::crossOver(){
             if(dealed[it->getNo()] == false)
                 it2 = order.insert(it2, *it);
     }
-    //Algorithm::getResult(order);
 }
 
 void GA::mutation(){
@@ -128,7 +178,7 @@ void GA::swap(int first, int second){
 void GA::printResult(){
     sort(order.begin(), order.end(), resultSort);
     cout << "Using Genetic Algorithm\n";
-    Algorithm::getResult(order);
+    Algorithm::getResult(result);
 }
 
 bool GA::resultSort(Dishes a, Dishes b){
@@ -138,12 +188,16 @@ bool GA::resultSort(Dishes a, Dishes b){
         return a.getTimeS() < b.getTimeS();
 }
 
-vector<Dishes> fifo(vector<Dishes> order_for_fifo){
+vector<Dishes> GA::fifo(int clock, vector<Dishes> order_for_fifo){
+    cout << "in fifo\n";
     sort(order_for_fifo.begin(), order_for_fifo.end(), GA::firstComeCmp);
     int i(0);
-    while(i<num){
-        for(int j=1; j<=machine && i<num; j++){
-            if(clock > timer[j]){
+    int *timer = new int [machine+1];
+    memset(timer, clock, (machine+1)*sizeof(int));
+    while(i<order_for_fifo.size()){
+        cout << "in while\n";
+        for(int j=1; j<=machine && i<order_for_fifo.size(); j++){
+            if(clock >= timer[j]){
                 if(timer[j] >= order_for_fifo[i].getTimeR()){
                     order_for_fifo[i].setTimeP(order_for_fifo[i].getDishNo(), j);
                     order_for_fifo[i].setMachineNo(j);
@@ -151,7 +205,6 @@ vector<Dishes> fifo(vector<Dishes> order_for_fifo){
                     order_for_fifo[i].setTimeC(order_for_fifo[i].getTimeS() + order_for_fifo[i].getTimeP());
                     order_for_fifo[i].setTimeW(order_for_fifo[i].getTimeC() - order_for_fifo[i].getTimeR());
                     timer[j] += order_for_fifo[i].getTimeP();
-                    totalWaiting += order_for_fifo[i].getTimeW();
                     i++;
                 }
                 else
@@ -161,31 +214,37 @@ vector<Dishes> fifo(vector<Dishes> order_for_fifo){
         clock++;
     }
     
-    return order;
+    return order_for_fifo;
 }
 
 bool GA::firstComeCmp(Dishes a, Dishes b){
     return a.getTimeR() < b.getTimeR();
 }
 
-vector<Dishes> minProcess(vector<Dishes>){
+vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
+    cout << "in minProcess\n";
+    int size = order_for_mp.size();
     bool *dealed = new bool [num];
     memset(dealed, true, num);
-    
+    int *timer = new int [machine+1];
+    memset(timer, clock, (machine+1)*sizeof(int));
     vector<vector<Dishes>> machineTpOrder(machine+1);
     for(int i=1; i<=machine; i++){
-        machineTpOrder[i] = order;
-        for(int j=0; j<num; j++)
+        machineTpOrder[i].clear();
+        machineTpOrder[i] = order_for_mp;
+        for(int j=0; j<order_for_mp.size(); j++)
             machineTpOrder[i][j].setTimeP(machineTpOrder[i][j].getDishNo(), i);
-        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), MinProcessingTime::TpCmp);
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), GA::TpCmp);
     }
-    
+   
     int i(0);
-    while(i<num){
-        for(int k=1; k<=machine && i<num; k++){
+    int tempCount(0);
+    while(i<order_for_mp.size()){
+        ++tempCount;
+        for(int k=1; k<=machine && i<order_for_mp.size(); k++){
             if(clock>=timer[k]){
                 bool deal(false);
-                for(int j=0; j<num; j++){
+                for(int j=0; j<order_for_mp.size(); j++){
                     if(dealed[machineTpOrder[k][j].getNo()-1] && timer[k] >= machineTpOrder[k][j].getTimeR()){
                         dealed[machineTpOrder[k][j].getNo()-1] = false;
                         machineTpOrder[k][j].setMachineNo(k);
@@ -193,31 +252,35 @@ vector<Dishes> minProcess(vector<Dishes>){
                         machineTpOrder[k][j].setTimeC(machineTpOrder[k][j].getTimeS() + machineTpOrder[k][j].getTimeP());
                         machineTpOrder[k][j].setTimeW(machineTpOrder[k][j].getTimeC() - machineTpOrder[k][j].getTimeR());
                         timer[k]+=machineTpOrder[k][j].getTimeP();
-                        totalWaiting += machineTpOrder[k][j].getTimeW();
                         deal = true;
                         break;
                     }
                 }
-                if(deal)
+                if(deal){
                     i++;
-                else
+                }
+                else{
                     timer[k]++;
+                }
             }
         }
         clock++;
     }
     
+    //cout <<"first for\n";
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
     
+    //cout << "second for\n";
     for(int i=1; i<=machine; i++)
-        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), DishNoCmp);
-    sort(order.begin(), order.end(), DishNoCmp);
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), dishNoCmp);
+    sort(order.begin(), order.end(), dishNoCmp);
     
-    for(int i=0; i<num; i++)
+    //cout << "third for\n";
+    for(int i=0; i<order_for_mp.size(); i++)
         for(int j=1; j<=machine; j++){
-            if(machineTpOrder[j][i].getMachineNo() > 0){
+            if(machineTpOrder[j][i].getMachineNo() > 0 && machineTpOrder[j][i].getMachineNo() <= machine){
                 order[i] = machineTpOrder[j][i];
                 break;
             }
@@ -225,5 +288,16 @@ vector<Dishes> minProcess(vector<Dishes>){
     
     delete [] dealed;
     
-    return order;
+    return order_for_mp;
+}
+
+bool GA::dishNoCmp(Dishes a, Dishes b){
+    return a.getDishNo() < b.getDishNo();
+}
+
+bool GA::TpCmp(Dishes a, Dishes b){
+    if(a.getTimeP() != b.getTimeP())
+        return a.getTimeP() < b.getTimeP();
+    else
+        return a.getTimeR() < b.getTimeR();
 }

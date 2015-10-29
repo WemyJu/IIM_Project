@@ -53,7 +53,7 @@ bool FIFO::checkSchedule(int clock){
 
 void FIFO::printResult(){
     cout << "Using FIFO\n";
-    Algorithm::getResult(order);
+    Algorithm::getResult(result);
 }
 
 vector<Dishes> FIFO::getResult(){

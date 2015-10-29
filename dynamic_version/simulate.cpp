@@ -20,33 +20,33 @@ bool timeRCmp(Dishes a, Dishes b){
 
 int main(){
     vector<Dishes> order, fifoResult, minProResult, GAResult, p1, p2;
-    int numOfOrder(0), machine(0), clock(0);
+    int numOfOrder(0), machine(0), clock(0), numOfDish(0);
     bool fifoEnd(false), minProEnd(false), GAEnd(false); 
 
-    machine = Machine::setMachine();
+    Machine::setMachine(machine, numOfDish);
     //Machine::printProcessing();
-    Algorithm::initOrder(order, numOfOrder);
+    Algorithm::initOrder(order, numOfOrder, numOfDish);
     sort(order.begin(), order.end(), timeRCmp);
    
     FIFO fifo(machine, numOfOrder);
     MinProcessingTime minPro(machine, numOfOrder);
-//    GA ga(machine);
+    GA ga(machine, numOfOrder);
     while(!fifoEnd || !minProEnd || !GAEnd || !order.empty()){
         while(clock >= order.begin()->getTimeR() && !order.empty()){
             Dishes dish = *(order.begin());
             fifo.addOrder(clock, dish);
             minPro.addOrder(clock, dish);
-            //ga.addOrder(clock, dish);
+            ga.addOrder(clock, dish);
             order.erase(order.begin());
         }
         fifoEnd = fifo.checkSchedule(clock);
         minProEnd = minPro.checkSchedule(clock);
-        // GAEnd = ga.checkSchedule(clock);
+        GAEnd = ga.checkSchedule(clock);
         GAEnd = true;
         clock++;
     }
-    fifo.printResult();
-     minPro.printResult();
+    // fifo.printResult();
+    // minPro.printResult();
     // ga.printResult();
 
     Dishes::deleteTp();

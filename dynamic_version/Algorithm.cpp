@@ -6,7 +6,7 @@
 
 #include "Algorithm.h"
 
-void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
+void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
     int nextTime(0), order_num(0);
     srand(time(NULL));
     n = rand()%10+50;
@@ -29,20 +29,12 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n){
 
         for(int j=0; j<order_num; j++, i++){
             //Dishes *dish = new Dishes;
-            switch(rand()%3+1){
-                case 1:
-                    dish.setName("Dish No.1");
-                    dish.setDishNo(1);
-                    break;
-                case 2:
-                    dish.setName("Dish No.2");
-                    dish.setDishNo(2);
-                    break;
-                case 3:
-                    dish.setName("Dish No.3");
-                    dish.setDishNo(3);
-                    break;
-            }
+            int dishNum = rand()%d+1;
+            char a = '0'+dishNum;
+            string name = "Dish No.";
+            name += a;
+            dish.setName(name);
+            dish.setDishNo(dishNum);
             dish.setTimeR(Tr);
             //dish.setTimeR(0);
             dish.setNo(i+1);
@@ -62,7 +54,7 @@ int Algorithm::getCompleteTime(){
     return completeTime;
 }
 
-void Algorithm::getResult(vector<Dishes> order){
+void Algorithm::getResult(vector<Dishes> result){
     cout << "-----------------------------------------------------------------\n";
     cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)

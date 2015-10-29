@@ -15,7 +15,7 @@ using namespace std;
 
 class Machine{
     public:
-        static int setMachine();
+        static void setMachine(int&, int&);
         static void printProcessing();
     private:
         int static machineNum, dishNum;

@@ -105,5 +105,5 @@ bool MinProcessingTime::checkSchedule(int clock){
 
 void MinProcessingTime::printResult(){
     cout << "Using Min Processing Time\n";
-    Algorithm::getResult(order);
+    Algorithm::getResult(result);
 }
