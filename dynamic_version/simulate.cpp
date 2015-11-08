@@ -19,7 +19,7 @@ bool timeRCmp(Dishes a, Dishes b){
 }
 
 int main(){
-    vector<Dishes> order, fifoResult, minProResult, GAResult, p1, p2;
+    vector<Dishes> order, oriOrder;
     int numOfOrder(0), machine(0), clock(0), numOfDish(0);
     bool fifoEnd(false), minProEnd(false), GAEnd(false); 
 
@@ -27,27 +27,51 @@ int main(){
     //Machine::printProcessing();
     Algorithm::initOrder(order, numOfOrder, numOfDish);
     sort(order.begin(), order.end(), timeRCmp);
+    oriOrder = order;
    
     FIFO fifo(machine, numOfOrder);
     MinProcessingTime minPro(machine, numOfOrder);
-    GA ga(machine, numOfOrder);
-    while(!fifoEnd || !minProEnd || !GAEnd || !order.empty()){
+    while(!fifoEnd || !minProEnd || !order.empty()){
         while(clock >= order.begin()->getTimeR() && !order.empty()){
             Dishes dish = *(order.begin());
             fifo.addOrder(clock, dish);
             minPro.addOrder(clock, dish);
-            ga.addOrder(clock, dish);
             order.erase(order.begin());
         }
         fifoEnd = fifo.checkSchedule(clock);
         minProEnd = minPro.checkSchedule(clock);
-        GAEnd = ga.checkSchedule(clock);
-     //   GAEnd = true;
         clock++;
     }
-     fifo.printResult();
-     minPro.printResult();
-     ga.printResult();
+    fifo.printResult();
+    minPro.printResult();
+    
+
+    GA gaMinTw;
+    GA gaMinTc;
+    GA ga(machine, numOfOrder);
+    for(int j=0; j<1000; j++){
+        order = oriOrder;
+        clock = 0;
+        GAEnd = false;
+        ga.renew();
+        while(!GAEnd || !order.empty()){
+            while(clock >= order.begin()->getTimeR() && !order.empty()){
+                Dishes dish = *(order.begin());
+                ga.addOrder(clock, dish);
+                order.erase(order.begin());
+            }
+            GAEnd = ga.checkSchedule(clock);
+            clock++;
+        }
+        
+        if(gaMinTw.getTotalWaiting() > ga.getTotalWaiting())
+            gaMinTw = ga;
+        if(gaMinTc.getCompleteTime() > ga.getCompleteTime())
+            gaMinTc = ga;
+    }
+        
+    gaMinTw.printResult();
+    gaMinTc.printResult();
 
     Dishes::deleteTp();
 }
