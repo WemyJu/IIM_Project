@@ -30,9 +30,9 @@ int main(){
     p2 = minTp.setOrder();
     minTp.printResult();
     
-//    GA ga(p1, p2, numOfOrder, machine);
-//    ga.setOrder();
-//    ga.printResult();
+    GA ga(p1, p2, numOfOrder, machine);
+    ga.setOrder();
+    ga.printResult();
 
     Dishes::deleteTp();
 }
