@@ -50,7 +50,6 @@ int main(){
     order = oriOrder;
     clock = 0;
     bool addDish = false;
-    //ga.renew();
     while(!GAEnd || !order.empty()){
         while(clock >= order.begin()->getTimeR() && !order.empty()){
             Dishes dish = *(order.begin());
@@ -67,14 +66,6 @@ int main(){
         clock++;
     }
     ga.printResult();
-   /* if(gaMinTw.getTotalWaiting() > ga.getTotalWaiting())
-        gaMinTw = ga;
     
-    if(gaMinTc.getCompleteTime() > ga.getCompleteTime())
-        gaMinTc = ga;*/
-
-    //gaMinTw.printResult();
-    //gaMinTc.printResult();
-
     Dishes::deleteTp();
 }

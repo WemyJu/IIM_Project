@@ -53,32 +53,28 @@ int main(){
         minProTcPerDish += minPro.getCompleteTime()/numOfOrder;
 
 
-        GA gaMinTw;
-        GA gaMinTc;
-        GA ga(machine, numOfOrder);
-        for(int j=0; j<1000; j++){
-            order = oriOrder;
-            clock = 0;
-            GAEnd = false;
-            ga.renew();
-            while(!GAEnd || !order.empty()){
-                while(clock >= order.begin()->getTimeR() && !order.empty()){
-                    Dishes dish = *(order.begin());
-                    ga.addOrder(clock, dish);
-                    order.erase(order.begin());
-                }
-                GAEnd = ga.checkSchedule(clock);
-                clock++;
+        GA gaMinTw, gaMinTc, ga(machine, numOfOrder);
+        order = oriOrder;
+        clock = 0;
+        bool addDish = false;
+        while(!GAEnd || !order.empty()){
+            while(clock >= order.begin()->getTimeR() && !order.empty()){
+                Dishes dish = *(order.begin());
+                ga.addOrder(dish);
+                order.erase(order.begin());
+                addDish = true;
             }
-
-            if(gaMinTw.getTotalWaiting() > ga.getTotalWaiting())
-                gaMinTw = ga;
-            if(gaMinTc.getCompleteTime() > ga.getCompleteTime())
-                gaMinTc = ga;
+            if(addDish){
+                ga.generateChild(clock);
+                ga.findBest(clock);
+                addDish = false;
+            }
+            GAEnd = ga.checkSchedule(clock);
+            clock++;
         }
 
-        gaTwPerDish += gaMinTw.getTotalWaiting()/numOfOrder;
-        gaTcPerDish += gaMinTc.getCompleteTime()/numOfOrder;
+        gaTwPerDish += ga.getTotalWaiting()/numOfOrder;
+        gaTcPerDish += ga.getCompleteTime()/numOfOrder;
 
         Dishes::deleteTp();
     }

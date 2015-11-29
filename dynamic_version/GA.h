@@ -28,7 +28,6 @@ class GA : public Algorithm{
         static bool dishNoCmp(Dishes, Dishes);
         static bool TpCmp(Dishes, Dishes);
         void operator=(GA ga);
-       // void renew();
         void addOrder(Dishes);
         void findBest(int);
         void generateChild(int);

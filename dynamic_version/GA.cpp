@@ -42,22 +42,8 @@ void GA::operator=(GA ga){
     completeTime = ga.completeTime;
 }
 
-/*void GA::renew(){
-  totalWaiting = 0;
-  completeTime = 0;
-  order.clear();
-  result.clear();
-  p1.clear();
-  p2.clear();
-  memset(gaTimer, 0, (machine+1)*sizeof(int));
-  }*/
-
 void GA::addOrder(Dishes newDish){
     order.insert(order.end(), newDish);
-    /* p1 = fifo(timer, order);
-       p2 = minProcess(timer, order);
-       sort(p1.begin(), p1.end(), GA::initSort);
-       sort(p2.begin(), p2.end(), GA::initSort);*/
 }
 
 void GA::findBest(int clock){
@@ -124,17 +110,6 @@ void GA::generateChild(int clock){
 }
 
 bool GA::checkSchedule(int clock){
-    /*if(numToMutate > 0){
-      for(; numToMutate>0; numToMutate--){
-      int range = order.size();
-      int first = rand()%range;
-      int second = rand()%range;
-      if(first != second)
-      swap(first, second);
-      }
-      checkOrder(clock);
-      }*/
-    //checkOrder(clock);
     for(int i=1; i<=machine; i++){
         if(clock >= gaTimer[i]){
             vector<Dishes>::iterator it;
@@ -205,10 +180,13 @@ void GA::crossOver(int p1, int p2){
 }
 
 void GA::mutation(int index){
-   /* int first, second;
-    int change = rand()%100+1;
-    if(change<50)
-        swap(first, second, index);*/
+    if(c[index].size()!=0){
+        int change = rand()%100+1;
+        int first = rand()%c[index].size();
+        int second = rand()%c[index].size();
+        if(change<50 && first!=second)
+        swap(first, second, index);
+    }
 }
 
 void GA::swap(int first, int second, int index){

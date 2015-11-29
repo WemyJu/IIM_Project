@@ -3,3 +3,9 @@
 .*.*.swo
 .*.*.swn
 *.sh
+*.zip
+*.rar
+*.7z
+./SA/*
+*/simulate
+*/analyze
