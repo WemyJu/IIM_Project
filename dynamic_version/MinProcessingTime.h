@@ -14,7 +14,7 @@
 
 using namespace std;
 
-class MinProcessingTime : Algorithm{
+class MinProcessingTime : public Algorithm{
     public:
         MinProcessingTime(int, int);
         ~MinProcessingTime();

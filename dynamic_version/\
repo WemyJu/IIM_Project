@@ -30,7 +30,7 @@ class GA : public Algorithm{
         void operator=(GA ga);
        // void renew();
         void addOrder(Dishes);
-        void findBest(int);
+        void findBest();
         void generateChild(int);
         bool checkSchedule(int);
         vector<Dishes> setOrder();
@@ -47,9 +47,8 @@ class GA : public Algorithm{
         vector<Dishes> p[50];
         vector<Dishes> c[1250];
         int *gaTimer;
+        int *tempTimer;
         int numToMutate;
-        int childNum;
-        const int MAXINT = 2147483647;
 };
 
 #endif

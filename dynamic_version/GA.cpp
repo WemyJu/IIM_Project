@@ -13,8 +13,6 @@ GA::GA(int m, int n){
     completeTime = 0;
     order.clear();
     result.clear();
-    p1.clear();
-    p2.clear();
     gaTimer = new int [machine+1];
     memset(gaTimer, 0, (machine+1)*sizeof(int));
     numToMutate = 0;
@@ -22,10 +20,12 @@ GA::GA(int m, int n){
 }
 
 GA::GA(){
-    totalWaiting = completeTime = 2147483647; // int max     
+    totalWaiting = completeTime = MAXINT;    
 };
 
-GA::~GA(){};
+GA::~GA(){
+    delete [] gaTimer;
+};
 
 bool GA::initSort(Dishes a, Dishes b){
     if(a.getMachineNo() != b.getMachineNo())
@@ -42,39 +42,99 @@ void GA::operator=(GA ga){
     completeTime = ga.completeTime;
 }
 
-void GA::renew(){
-    totalWaiting = 0;
-    completeTime = 0;
-    order.clear();
-    result.clear();
-    p1.clear();
-    p2.clear();
-    memset(gaTimer, 0, (machine+1)*sizeof(int));
+/*void GA::renew(){
+  totalWaiting = 0;
+  completeTime = 0;
+  order.clear();
+  result.clear();
+  p1.clear();
+  p2.clear();
+  memset(gaTimer, 0, (machine+1)*sizeof(int));
+  }*/
+
+void GA::addOrder(Dishes newDish){
+    order.insert(order.end(), newDish);
+    /* p1 = fifo(timer, order);
+       p2 = minProcess(timer, order);
+       sort(p1.begin(), p1.end(), GA::initSort);
+       sort(p2.begin(), p2.end(), GA::initSort);*/
 }
 
-void GA::addOrder(int timer, Dishes newDish){
-    order.insert(order.end(), newDish);
-    p1 = fifo(timer, order);
-    p2 = minProcess(timer, order);
-    sort(p1.begin(), p1.end(), GA::initSort);
-    sort(p2.begin(), p2.end(), GA::initSort);
-    crossOver();
-    mutation();
+void GA::findBest(int clock){
+    int localWaiting(MAXINT), localComplete(MAXINT), TwBestChoice(-1), TcBestChoic(-1);
+    int *tempTimer = new int [machine+1];
+
+    for(int i=0; i<childNum; i++){
+        for(int j=1; j<=machine; j++)
+            tempTimer[j] = gaTimer[j];
+        int k(0), Tw(0), Tc(0);
+        while(k<c[i].size()){
+            for(int j=1; j<=machine && k<c[i].size(); j++){
+                if(clock >= tempTimer[j]){
+                    if(tempTimer[j] >= c[i][k].getTimeR()){
+                        c[i][k].setTimeP(c[i][k].getDishNo(), j);
+                        tempTimer[j] += c[i][k].getTimeP();
+                        Tw += tempTimer[j] + c[i][k].getTimeP() - c[i][k].getTimeR();
+                        // Tc
+                        i++;
+                    }
+                    else
+                        tempTimer[j]++;
+                }
+            }
+            clock++;
+        }
+        if(c[i].size() > 0 && localWaiting > Tw){
+            localWaiting = Tw;
+            TwBestChoice = i;
+        }
+    }
+    order = c[TwBestChoice];
+    delete [] tempTimer;
+}
+
+void GA::generateChild(int clock){
+    childNum = 1225;
+    p[0] = fifo(clock, order);
+    p[1] = minProcess(clock, order);
+    for(int i=2; i<26; i++)
+        p[i] = p[0];
+    for(int i=26; i<50; i++)
+        p[i] = p[1];
+    for(int i=0; i<50; i++){
+        for(int j=0; j<p[i].size()/3; j++){
+            int first = rand()%p[i].size();
+            int second = rand()%p[i].size();
+            if(first != second){
+                Dishes temp = p[j][first];
+                int tempMachineNo = p[j][second].getMachineNo();
+                p[j][first] = p[j][second];
+                p[j][first].setMachineNo(temp.getMachineNo());
+                p[j][second] = temp;
+                p[j][second].setMachineNo(tempMachineNo);
+            }
+        }
+        sort(p[i].begin(), p[i].end(), initSort);
+    }
+    for(int i=0; i<50; i++)
+        for(int j=i+1; j<50; j++)
+            crossOver(i, j);
+    for(int i=0; i<childNum; i++)
+        mutation(i);
 }
 
 bool GA::checkSchedule(int clock){
-    if(numToMutate > 0){
-        for(; numToMutate>0; numToMutate--){
-            int range = order.size();
-            int first = rand()%range;
-            int second = rand()%range;
-            if(first != second)
-                swap(first, second);
-        }
-
-        checkOrder(clock);
-    }
-
+    /*if(numToMutate > 0){
+      for(; numToMutate>0; numToMutate--){
+      int range = order.size();
+      int first = rand()%range;
+      int second = rand()%range;
+      if(first != second)
+      swap(first, second);
+      }
+      checkOrder(clock);
+      }*/
+    //checkOrder(clock);
     for(int i=1; i<=machine; i++){
         if(clock >= gaTimer[i]){
             vector<Dishes>::iterator it;
@@ -105,26 +165,23 @@ bool GA::checkSchedule(int clock){
     return order.empty();
 }
 
-void GA::crossOver(){
-    vector<Dishes>::iterator it=order.begin();
+void GA::crossOver(int p1, int p2){
+    int index = p1*50+p2;
+    vector<Dishes>::iterator it;
     bool *dealed = new bool [num+1];
     memset(dealed, false, num+1);
     int usedNum(0), pastMachine(1);
-    
-    order.clear();
-
-    for(int i=0; i<p2.size(); i++)
-        if(p2[i].getMachineNo()==machine){
-            order.push_back(p2[i]);
-            dealed[p2[i].getNo()] = true;
+    for(int i=0; i<p[p2].size(); i++)
+        if(p[p2][i].getMachineNo() == machine){
+            c[index].push_back(p[p2][i]);
+            dealed[p[p2][i].getNo()] = true;
         }
-
-    for(int i=0; i<p1.size(); i++){
-        if(p1[i].getMachineNo()==pastMachine){
-            if(!dealed[p1[i].getNo()]){
-                it = order.insert(it, p1[i]);
-                it++;
-                dealed[p1[i].getNo()] = true;
+    it = c[index].begin();
+    for(int i=0; i<p[p1].size(); i++){
+        if(p[p1][i].getMachineNo()==pastMachine){
+            if(!dealed[p[p1][i].getNo()]){
+                it = c[index].insert(it, p[p1][i]);
+                dealed[p[p1][i].getNo()] = true;
             }
             else
                 usedNum++;
@@ -134,41 +191,42 @@ void GA::crossOver(){
                 usedNum--;
             else
                 pastMachine++;
-            if(!dealed[p1[i].getNo()]){
-                p1[i].setMachineNo(pastMachine);
-                it = order.insert(it, p1[i]);
+            if(!dealed[p[p1][i].getNo()]){
+                p[p1][i].setMachineNo(pastMachine);
+                it = c[index].insert(it, p[p1][i]);
                 it++;
-                dealed[p1[i].getNo()] = true;
+                dealed[p[p1][i].getNo()] = true;
             }
             else
                 usedNum++;
         }
     }
+    delete [] dealed;
 }
 
-void GA::mutation(){
-    int first, second;
+void GA::mutation(int index){
+   /* int first, second;
     int change = rand()%100+1;
     if(change<50)
-        numToMutate++;
+        swap(first, second, index);*/
 }
 
-void GA::swap(int first, int second){
-    Dishes temp = order[first];
-    int tempMachineNo = order[second].getMachineNo();
-    order[first] = order[second];
-    order[first].setMachineNo(temp.getMachineNo());
-    order[second] = temp;
-    order[second].setMachineNo(tempMachineNo);
+void GA::swap(int first, int second, int index){
+    Dishes temp = c[index][first];
+    int tempMachineNo = c[index][second].getMachineNo();
+    c[index][first] = c[index][second];
+    c[index][first].setMachineNo(temp.getMachineNo());
+    c[index][second] = temp;
+    c[index][second].setMachineNo(tempMachineNo);
 }
 
-void GA::checkOrder(int clock){
+void GA::checkOrder(int clock, int index){
     int machineNo(1);
 
-    for(int i=1; i<order.size(); i++){
-        if(order[i].getMachineNo() == machineNo && order[i-1].getMachineNo() == machineNo){
-            if(order[i].getTimeR() > clock && order[i].getTimeR() > order[i-1].getTimeR())
-                swap(i, i-1);
+    for(int i=1; i<c[index].size(); i++){
+        if(c[index][i].getMachineNo() == machineNo && c[index][i-1].getMachineNo() == machineNo){
+            if(c[index][i].getTimeR() > clock && c[index][i].getTimeR() > c[index][i-1].getTimeR())
+                swap(i, i-1, index);
         }
         else
             machineNo++;
@@ -212,7 +270,7 @@ vector<Dishes> GA::fifo(int clock, vector<Dishes> order_for_fifo){
         }
         clock++;
     }
-    
+    delete [] timer; 
     return order_for_fifo;
 }
 
@@ -226,11 +284,11 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     memset(dealed, true, num);
     for(int i = 0; i<order_for_mp.size(); i++)
         order_for_mp[i].setMachineNo(0);
-    
+
     int *timer = new int [machine+1];
     for(int i=0; i<=machine; i++)
         timer[i] = clock;
-    
+
     vector<vector<Dishes>> machineTpOrder(machine+1);
     for(int i=1; i<=machine; i++){
         machineTpOrder[i].clear();
@@ -239,7 +297,7 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
             machineTpOrder[i][j].setTimeP(machineTpOrder[i][j].getDishNo(), i);
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), GA::TpCmp);
     }
-   
+
     int i(0);
     while(i<order_for_mp.size()){
         for(int k=1; k<=machine && i<order_for_mp.size(); k++){
@@ -269,11 +327,11 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     for(int i=1; i<=machine; i++)
         if(timer[i]>completeTime)
             completeTime = timer[i];
-    
+
     for(int i=1; i<=machine; i++)
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), dishNoCmp);
     sort(order.begin(), order.end(), dishNoCmp);
-    
+
     for(int i=0; i<order_for_mp.size(); i++)
         for(int j=1; j<=machine; j++){
             if(machineTpOrder[j][i].getMachineNo() > 0 && machineTpOrder[j][i].getMachineNo() <= machine){
@@ -281,9 +339,10 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
                 break;
             }
         }
-    
+
     delete [] dealed;
-    
+    delete [] timer;
+
     return order_for_mp;
 }
 

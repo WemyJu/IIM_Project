@@ -3,6 +3,9 @@ GXX = g++ -std=c++11
 all: Dishes.o Algorithm.o Machine.o FIFO.o MinProcessingTime.o GA.o
 	$(GXX) simulate.cpp Dishes.o Machine.o Algorithm.o FIFO.o MinProcessingTime.o GA.o -o simulate
 
+getAnalysis: Dishes.o Algorithm.o Machine.o FIFO.o MinProcessingTime.o GA.o
+	$(GXX) analyze.cpp Dishes.o Machine.o Algorithm.o FIFO.o MinProcessingTime.o GA.o -o analyze
+
 Dishes.o: Dishes.h Dishes.cpp
 	$(GXX) -c Dishes.cpp
 

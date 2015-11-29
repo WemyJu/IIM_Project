@@ -55,6 +55,7 @@ int Algorithm::getCompleteTime(){
 }
 
 void Algorithm::getResult(vector<Dishes> result){
+    cout << "result size : " << result.size() << endl;
     cout << "-----------------------------------------------------------------\n";
     cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)

@@ -28,7 +28,7 @@ int main(){
     Algorithm::initOrder(order, numOfOrder, numOfDish);
     sort(order.begin(), order.end(), timeRCmp);
     oriOrder = order;
-   
+
     FIFO fifo(machine, numOfOrder);
     MinProcessingTime minPro(machine, numOfOrder);
     while(!fifoEnd || !minProEnd || !order.empty()){
@@ -44,34 +44,37 @@ int main(){
     }
     fifo.printResult();
     minPro.printResult();
-    
 
-    GA gaMinTw;
-    GA gaMinTc;
-    GA ga(machine, numOfOrder);
-    for(int j=0; j<1000; j++){
-        order = oriOrder;
-        clock = 0;
-        GAEnd = false;
-        ga.renew();
-        while(!GAEnd || !order.empty()){
-            while(clock >= order.begin()->getTimeR() && !order.empty()){
-                Dishes dish = *(order.begin());
-                ga.addOrder(clock, dish);
-                order.erase(order.begin());
-            }
-            GAEnd = ga.checkSchedule(clock);
-            clock++;
+
+    GA gaMinTw, gaMinTc, ga(machine, numOfOrder);
+    order = oriOrder;
+    clock = 0;
+    bool addDish = false;
+    //ga.renew();
+    while(!GAEnd || !order.empty()){
+        while(clock >= order.begin()->getTimeR() && !order.empty()){
+            Dishes dish = *(order.begin());
+            ga.addOrder(dish);
+            order.erase(order.begin());
+            addDish = true;
         }
-        
-        if(gaMinTw.getTotalWaiting() > ga.getTotalWaiting())
-            gaMinTw = ga;
-        if(gaMinTc.getCompleteTime() > ga.getCompleteTime())
-            gaMinTc = ga;
+        if(addDish){
+            ga.generateChild(clock);
+            ga.findBest(clock);
+            addDish = false;
+        }
+        GAEnd = ga.checkSchedule(clock);
+        clock++;
     }
-        
-    gaMinTw.printResult();
-    gaMinTc.printResult();
+    ga.printResult();
+   /* if(gaMinTw.getTotalWaiting() > ga.getTotalWaiting())
+        gaMinTw = ga;
+    
+    if(gaMinTc.getCompleteTime() > ga.getCompleteTime())
+        gaMinTc = ga;*/
+
+    //gaMinTw.printResult();
+    //gaMinTc.printResult();
 
     Dishes::deleteTp();
 }
