@@ -14,7 +14,8 @@ void Machine::setMachine(int &machine, int &dish){
     int Tp;
     int **Tps;
 
-    fp.open("ProcessingTime.txt", ios::in);
+    //fp.open("ProcessingTime.txt", ios::in);
+    fp.open("FireMeal.txt", ios::in);
     fp >> machineNum >> dishNum;
     Tps = new int*[machineNum];
     for(int i=0; i<machineNum; i++){

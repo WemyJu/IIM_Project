@@ -25,6 +25,10 @@ bool FIFO::firstComeCmp(Dishes a, Dishes b){
     return a.getTimeR() < b.getTimeR();
 }
 
+bool FIFO::tableNumCmp(Dishes a, Dishes b){
+    return a.getTable() < b.getTable();
+}
+
 void FIFO::addOrder(int timer, Dishes newDish){
     order.insert(order.end(), newDish);
     sort(order.begin(), order.end(), FIFO::firstComeCmp);
