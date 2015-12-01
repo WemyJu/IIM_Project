@@ -24,7 +24,7 @@ int main(){
     bool fifoEnd(false), minProEnd(false), GAEnd(false); 
 
     Machine::setMachine(machine, numOfDish);
-    //Machine::printProcessing();
+    Machine::printProcessing();
     Algorithm::initOrder(order, numOfOrder, numOfDish);
     sort(order.begin(), order.end(), timeRCmp);
     oriOrder = order;
@@ -46,7 +46,7 @@ int main(){
     minPro.printResult();
 
 
-    GA gaMinTw, gaMinTc, ga(machine, numOfOrder);
+    GA ga(machine, numOfOrder);
     order = oriOrder;
     clock = 0;
     bool addDish = false;

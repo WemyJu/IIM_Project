@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <iomanip>
 #include <random>
+#include <string>
+#include <fstream>
 #include "Dishes.h"
 
 class Algorithm{
@@ -27,6 +29,9 @@ class Algorithm{
         int num;
         vector<Dishes> order;
         vector<Dishes> result;
+    private:
+        static void getDishName();
+        static string *dishName;
 };
 
 #endif

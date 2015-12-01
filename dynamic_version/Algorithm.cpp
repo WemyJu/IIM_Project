@@ -6,10 +6,15 @@
 
 #include "Algorithm.h"
 
+string* Algorithm::dishName = NULL;
+
 void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
     int nextTime(0), order_num(0);
     srand(time(NULL));
     n = rand()%10+50;
+    dishName = new string [d+1];
+
+    getDishName();
 
     default_random_engine generator(time(NULL));
     poisson_distribution<int> possion_dis(5);
@@ -30,11 +35,8 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
         for(int j=0; j<order_num; j++, i++){
             //Dishes *dish = new Dishes;
             int dishNum = rand()%d+1;
-            char a = '0'+dishNum;
-            string name = "Dish No.";
-            name += a;
-            dish.setName(name);
             dish.setDishNo(dishNum);
+            dish.setName(dishName[dishNum]);
             dish.setTimeR(Tr);
             //dish.setTimeR(0);
             dish.setNo(i+1);
@@ -44,6 +46,8 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
         if(i>n)
             n=i;
     }
+
+    delete [] dishName;
 }
 
 int Algorithm::getTotalWaiting(){
@@ -55,7 +59,6 @@ int Algorithm::getCompleteTime(){
 }
 
 void Algorithm::getResult(vector<Dishes> result){
-    cout << "result size : " << result.size() << endl;
     cout << "-----------------------------------------------------------------\n";
     cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)
@@ -70,4 +73,15 @@ void Algorithm::getResult(vector<Dishes> result){
     cout << "Total Waiting Time : " << totalWaiting << endl;
     cout << "Complete Time : " << completeTime << endl;
     cout << endl << endl;
+}
+
+void Algorithm::getDishName(){
+    fstream fp;
+    int machineNum, dishNum;
+
+    fp.open("FireMeat.txt", ios::in);
+    fp >> machineNum >> dishNum;
+    for(int i=1; i<=dishNum; i++)
+        fp >> dishName[i];
+    fp.close();
 }
