@@ -21,8 +21,11 @@ class Dishes{
         friend class MinProcessingTime;
         friend class GA;
         // ~Dishes();
-        static void deleteTp();
-        static int getMachine();  // get machine
+        static void deleteDynamicArray();
+        static int getMachine();  // get total number of machine
+        static int getDish();  //get total number of dish
+        static string getDishName(int);  // find the dish name by No.
+        static int getDishIndex(string);  // find the dish No. by name
         int getTimeS();  // get start time
         int getTimeP();  // get processing time
         int getTimeC();  // get complete time
@@ -34,8 +37,10 @@ class Dishes{
         int getMachineNo();  // get machine No.
         string getName();  // get dish name
     protected:
-        static void setProcessingTime(int**);
         static void setMachine(int);
+        static void setDish(int);
+        static void setProcessingTime(int**);
+        static void setDishName(string*);
         void setTimeR(int);
         void setTimeS(int);
         void setTimeC(int);
@@ -48,8 +53,9 @@ class Dishes{
         void setName(string);
         int process, start, release, complete, No, waiting, table, dishNo, machineNo;
         string name;
-        static int machine;
+        static int machine, dish;
         static int **Tp;
+        static string *dishName;
 };
 
 #endif

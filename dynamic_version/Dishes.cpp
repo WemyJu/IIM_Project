@@ -7,16 +7,36 @@
 #include "Dishes.h"
 
 int Dishes::machine = 0;
+int Dishes::dish = 0;
 int** Dishes::Tp = NULL;
+string* Dishes::dishName = NULL;
 
-void Dishes::setProcessingTime(int **Tps){
-    Tp = Tps;
-}
-
-void Dishes::deleteTp(){
+// get functions
+void Dishes::deleteDynamicArray(){
     for(int i=0; i<machine; i++)
         delete [] Tp[i];
-    delete Tp;
+    delete [] Tp;
+
+    delete [] dishName;
+}
+
+int Dishes::getMachine(){
+    return machine;
+}
+
+int Dishes::getDish(){
+    return dish;
+}
+
+string Dishes::getDishName(int index){
+    return dishName[index];
+}
+
+int Dishes::getDishIndex(string name){
+    for(int i=1; i<=dish; i++)
+        if(strcmp(dishName[i].c_str(), name.c_str()) == 0)
+            return i;
+    return 0;
 }
 
 int Dishes::getTimeS(){
@@ -47,9 +67,6 @@ int Dishes::getTable(){
     return table;
 }
 
-int Dishes::getMachine(){
-    return machine;
-}
 
 int Dishes::getDishNo(){
     return dishNo;
@@ -63,8 +80,21 @@ string Dishes::getName(){
     return name;
 }
 
-void Dishes::setNo(int NO){
-    No = NO;
+// set finctions 
+void Dishes::setMachine(int m){
+    machine = m;
+}
+
+void Dishes::setDish(int d){
+    dish = d;
+}
+
+void Dishes::setProcessingTime(int **Tps){
+    Tp = Tps;
+}
+
+void Dishes::setDishName(string* names){
+    dishName = names;
 }
 
 void Dishes::setTimeR(int r){
@@ -87,12 +117,12 @@ void Dishes::setTimeP(int dish, int machine){
     process = Tp[machine-1][dish-1];
 }
 
-void Dishes::setTable(int t){
-    table = t;
+void Dishes::setNo(int NO){
+    No = NO;
 }
 
-void Dishes::setMachine(int m){
-    machine = m;
+void Dishes::setTable(int t){
+    table = t;
 }
 
 void Dishes::setDishNo(int no){

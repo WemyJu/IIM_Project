@@ -10,6 +10,8 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <cstring>
+#include <sstream>
 #include <iomanip>
 #include <random>
 #include <string>
@@ -20,7 +22,7 @@ class Algorithm{
     public:
         Algorithm(){};
         //~Algorithm();
-        static void initOrder(vector<Dishes>&, int&, int&);
+        static void initOrder(vector<Dishes>&, int&, int, int, char* []);
         int getTotalWaiting();
         int getCompleteTime();
         void getResult(vector<Dishes>);
@@ -30,7 +32,8 @@ class Algorithm{
         vector<Dishes> order;
         vector<Dishes> result;
     private:
-        static void getDishName();
+        static vector<Dishes> produceOrders(int&, int);
+        static vector<Dishes> readOrders(int&, int, char* []);
         static string *dishName;
 };
 

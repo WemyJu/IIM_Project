@@ -18,14 +18,14 @@ bool timeRCmp(Dishes a, Dishes b){
     return a.getTimeR() < b.getTimeR();
 }
 
-int main(){
+int main(int argc, char *argv[]){
     vector<Dishes> order, oriOrder;
     int numOfOrder(0), machine(0), clock(0), numOfDish(0);
     bool fifoEnd(false), minProEnd(false), GAEnd(false); 
 
     Machine::setMachine(machine, numOfDish);
-    Machine::printProcessing();
-    Algorithm::initOrder(order, numOfOrder, numOfDish);
+   // Machine::printProcessing();
+    Algorithm::initOrder(order, numOfOrder, numOfDish, argc, argv);
     sort(order.begin(), order.end(), timeRCmp);
     oriOrder = order;
 
@@ -44,7 +44,6 @@ int main(){
     }
     fifo.printResult();
     minPro.printResult();
-
 
     GA ga(machine, numOfOrder);
     order = oriOrder;
@@ -67,5 +66,5 @@ int main(){
     }
     ga.printResult();
     
-    Dishes::deleteTp();
+    Dishes::deleteDynamicArray();
 }
