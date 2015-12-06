@@ -74,6 +74,7 @@ void GA::findBest(int clock){
             TwBestChoice = i;
         }
     }
+    //cout << "Best = " << TwBestChoice << endl;
     order = c[TwBestChoice];
     delete [] tempTimer;
 }
@@ -87,7 +88,7 @@ void GA::generateChild(int clock){
     for(int i=26; i<50; i++)
         p[i] = p[1];
     for(int i=2; i<50; i++){
-        for(int j=0; j<p[i].size()/3; j++){
+        for(int j=0; j<p[i].size(); j++){
             int first = rand()%p[i].size();
             int second = rand()%p[i].size();
             if(first != second){

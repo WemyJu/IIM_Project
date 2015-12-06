@@ -45,6 +45,10 @@ void Algorithm::getResult(vector<Dishes> result){
     cout << endl << endl;
 }
 
+vector<Dishes> Algorithm::getScheduleResult(){
+    return result;
+}
+
 vector<Dishes> Algorithm::produceOrders(int& n, int d){
     int nextTime(0), order_num(0);
     vector<Dishes> ordering;

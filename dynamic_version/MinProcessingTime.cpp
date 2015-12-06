@@ -60,7 +60,11 @@ void MinProcessingTime::addOrder(int timer, Dishes newDish){
         newDish.setTimeP(newDish.getDishNo(), i);
         machineTpOrder[i].insert(machineTpOrder[i].end(), newDish); 
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), TpCmp);
+        cout << machineTpOrder[i].size() << " ";
+        //for(int j=0; i<machineTpOrder[i].size(); j++)
+          //  cout << machineTpOrder[i][j].getTimeR() << " "  << machineTpOrder[i][j].getTimeP() << endl;
     }
+    cout << endl;
 }
 
 bool MinProcessingTime::checkSchedule(int clock){

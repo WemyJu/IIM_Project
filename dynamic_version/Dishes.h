@@ -20,6 +20,7 @@ class Dishes{
         friend class FIFO;
         friend class MinProcessingTime;
         friend class GA;
+        friend class SA;
         // ~Dishes();
         static void deleteDynamicArray();
         static int getMachine();  // get total number of machine

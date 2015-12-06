@@ -11,6 +11,7 @@
 #include "FIFO.h"
 #include "MinProcessingTime.h"
 #include "GA.h"
+#include "SA.h"
 
 using namespace std;
 
@@ -65,6 +66,10 @@ int main(int argc, char *argv[]){
         clock++;
     }
     ga.printResult();
-    
+   
+    SA sa(minPro.getScheduleResult(), numOfOrder, machine);
+    sa.logic(numOfOrder, machine);
+    sa.printResult();
+
     Dishes::deleteDynamicArray();
 }

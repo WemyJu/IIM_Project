@@ -26,6 +26,7 @@ class Algorithm{
         int getTotalWaiting();
         int getCompleteTime();
         void getResult(vector<Dishes>);
+        vector<Dishes> getScheduleResult();
     protected:
         int totalWaiting, completeTime; 
         int num;
