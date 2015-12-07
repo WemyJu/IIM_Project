@@ -32,10 +32,8 @@ class GA : public Algorithm{
         void findBest(int);
         void generateChild(int);
         bool checkSchedule(int);
-        vector<Dishes> setOrder();
         void printResult();
     private:
-        void init();
         void crossOver(int, int);
         void mutation(int);
         void checkOrder(int, int);
@@ -46,7 +44,6 @@ class GA : public Algorithm{
         vector<Dishes> p[50];
         vector<Dishes> c[1250];
         int *gaTimer;
-        int numToMutate;
         int childNum;
         const int MAXINT = 2147483647;
 };

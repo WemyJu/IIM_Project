@@ -61,13 +61,15 @@ void MinProcessingTime::addOrder(int timer, Dishes newDish){
         machineTpOrder[i].insert(machineTpOrder[i].end(), newDish); 
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), TpCmp);
         cout << machineTpOrder[i].size() << " ";
-        //for(int j=0; i<machineTpOrder[i].size(); j++)
-          //  cout << machineTpOrder[i][j].getTimeR() << " "  << machineTpOrder[i][j].getTimeP() << endl;
+        for(int j=0; j<machineTpOrder[i].size(); j++)
+            cout << machineTpOrder[i][j].getNo() << " ";
     }
     cout << endl;
 }
 
 bool MinProcessingTime::checkSchedule(int clock){
+    if(result.size()==num)
+        return true;
     for(int i=1; i<=machine; i++){
         if(clock >= timer[i]){
             bool deal(false);
@@ -101,10 +103,7 @@ bool MinProcessingTime::checkSchedule(int clock){
         if(timer[i]>completeTime)
             completeTime = timer[i];
 
-    for(int i=1; i<=machine; i++)
-        if(!machineTpOrder[i].empty())
-            return false;
-    return true;
+    return false;
 }
 
 void MinProcessingTime::printResult(){

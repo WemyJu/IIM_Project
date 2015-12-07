@@ -41,7 +41,7 @@ void Algorithm::getResult(vector<Dishes> result){
             << setw(10) << result[i].getTimeC()
             << setw(9) << result[i].getTimeW() << endl;
     cout << "Total Waiting Time : " << totalWaiting << endl;
-    cout << "Complete Time : " << completeTime << endl;
+    cout << "Average Waiting Time : " << totalWaiting/num << endl;
     cout << endl << endl;
 }
 

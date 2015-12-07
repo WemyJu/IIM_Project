@@ -15,7 +15,6 @@ GA::GA(int m, int n){
     result.clear();
     gaTimer = new int [machine+1];
     memset(gaTimer, 0, (machine+1)*sizeof(int));
-    numToMutate = 0;
     srand(time(NULL));
 }
 
@@ -32,6 +31,28 @@ bool GA::initSort(Dishes a, Dishes b){
         return a.getMachineNo() < b.getMachineNo();
     else
         return a.getTimeS() < b.getTimeS();
+}
+
+bool GA::resultSort(Dishes a, Dishes b){
+    if(a.getTable() != b.getTable())
+        return a.getTable() < b.getTable();
+    else
+        return a.getTimeS() < b.getTimeS();
+}
+
+bool GA::firstComeCmp(Dishes a, Dishes b){
+    return a.getTimeR() < b.getTimeR();
+}
+
+bool GA::dishNoCmp(Dishes a, Dishes b){
+    return a.getNo() < b.getNo();
+}
+
+bool GA::TpCmp(Dishes a, Dishes b){
+    if(a.getTimeP() != b.getTimeP())
+        return a.getTimeP() < b.getTimeP();
+    else
+        return a.getTimeR() < b.getTimeR();
 }
 
 void GA::operator=(GA ga){
@@ -140,6 +161,12 @@ bool GA::checkSchedule(int clock){
     return order.empty();
 }
 
+void GA::printResult(){
+    sort(order.begin(), order.end(), resultSort);
+    cout << "Using Genetic Algorithm\n";
+    Algorithm::getResult(result);
+}
+
 void GA::crossOver(int p1, int p2){
     int index = p1*((50-1)-(p1+1)/2)+p2-1;
     vector<Dishes>::iterator it;
@@ -192,15 +219,6 @@ void GA::mutation(int index){
     }
 }
 
-void GA::swap(int first, int second, int index){
-    Dishes temp = c[index][first];
-    int tempMachineNo = c[index][second].getMachineNo();
-    c[index][first] = c[index][second];
-    c[index][first].setMachineNo(temp.getMachineNo());
-    c[index][second] = temp;
-    c[index][second].setMachineNo(tempMachineNo);
-}
-
 void GA::checkOrder(int clock, int index){
     int machineNo(1);
 
@@ -214,17 +232,13 @@ void GA::checkOrder(int clock, int index){
     }
 }
 
-void GA::printResult(){
-    sort(order.begin(), order.end(), resultSort);
-    cout << "Using Genetic Algorithm\n";
-    Algorithm::getResult(result);
-}
-
-bool GA::resultSort(Dishes a, Dishes b){
-    if(a.getTable() != b.getTable())
-        return a.getTable() < b.getTable();
-    else
-        return a.getTimeS() < b.getTimeS();
+void GA::swap(int first, int second, int index){
+    Dishes temp = c[index][first];
+    int tempMachineNo = c[index][second].getMachineNo();
+    c[index][first] = c[index][second];
+    c[index][first].setMachineNo(temp.getMachineNo());
+    c[index][second] = temp;
+    c[index][second].setMachineNo(tempMachineNo);
 }
 
 vector<Dishes> GA::fifo(int clock, vector<Dishes> order_for_fifo){
@@ -253,10 +267,6 @@ vector<Dishes> GA::fifo(int clock, vector<Dishes> order_for_fifo){
     }
     delete [] timer; 
     return order_for_fifo;
-}
-
-bool GA::firstComeCmp(Dishes a, Dishes b){
-    return a.getTimeR() < b.getTimeR();
 }
 
 vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
@@ -318,15 +328,4 @@ vector<Dishes> GA::minProcess(int clock, vector<Dishes> order_for_mp){
     delete [] timer;
 
     return order_for_mp;
-}
-
-bool GA::dishNoCmp(Dishes a, Dishes b){
-    return a.getNo() < b.getNo();
-}
-
-bool GA::TpCmp(Dishes a, Dishes b){
-    if(a.getTimeP() != b.getTimeP())
-        return a.getTimeP() < b.getTimeP();
-    else
-        return a.getTimeR() < b.getTimeR();
 }
