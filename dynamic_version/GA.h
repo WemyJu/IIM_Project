@@ -13,12 +13,24 @@
 #include <climits>
 #include <cstdlib>
 #include <ctime>
+#include <queue>
 #include "Algorithm.h"
 
 using namespace std;
 
 class GA : public Algorithm{
     public:
+        typedef struct{
+            int index;
+            int Tw;
+        }CHILDINFO;
+
+        typedef struct{
+             bool operator() (const CHILDINFO& a, const CHILDINFO& b){
+                 return a.Tw > b.Tw;
+             }
+        }chooseGenerations;
+
         GA(int, int);
         GA();
         ~GA();
@@ -30,12 +42,15 @@ class GA : public Algorithm{
         void operator=(GA ga);
         void addOrder(Dishes);
         void findBest(int);
+        void findBetter(int);
         void generateChild(int);
         bool checkSchedule(int);
         void printResult();
     private:
         void crossOver(int, int);
         void mutation(int);
+        void crossOver();
+        void mutation();
         void checkOrder(int, int);
         void swap(int, int, int);
         vector<Dishes> fifo(int, vector<Dishes>);
@@ -44,7 +59,7 @@ class GA : public Algorithm{
         vector<Dishes> p[50];
         vector<Dishes> c[1250];
         int *gaTimer;
-        int childNum;
+        int childNum, generation;
         const int MAXINT = 2147483647;
 };
 

@@ -163,16 +163,17 @@ void SA::countScheduleResult(){
 void SA::printResult(){
     int a=0;
     cout<<"Using SA\n";
-    cout << "-----------------------------------------------------------------\n";
-    cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
+    cout << "-------------------------------------------------------------------\n";
+    cout << " No.  Dish Name  Table  Release  Machine  Start  Complete  Waiting \n";
     for( int i=0;i<machine;i++){
         for(int j=0;j<SA_vector[i].size();j++){
             cout << " " << setw(3) << SA_vector[i][j].getNo()
+            << setw(15) << SA_vector[i][j].getName()
             << setw(7) << SA_vector[i][j].getTable()
             << setw(9) << SA_vector[i][j].getTimeR()
             << setw(9) << SA_vector[i][j].getMachineNo()
             << setw(7) << SA_vector[i][j].getTimeS()
-            << setw(9) << SA_vector[i][j].getTimeP()
+            //<< setw(9) << SA_vector[i][j].getTimeP()
             << setw(10) << SA_vector[i][j].getTimeC()
             << setw(9) << SA_vector[i][j].getTimeW() << endl;}}
     cout << "Total Waiting Time : " << SA_totalWaiting << endl;

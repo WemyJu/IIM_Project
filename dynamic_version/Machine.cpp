@@ -17,6 +17,7 @@ void Machine::setMachine(int &machine, int &dish){
 
     //fp.open("ProcessingTime.txt", ios::in);
     fp.open("FireMeal.txt", ios::in);
+    //fp.open("test.txt", ios::in);
     fp >> machineNum >> dishNum;
 
     names = new string [dishNum+1];

@@ -71,5 +71,5 @@ int main(int argc, char *argv[]){
     sa.logic(numOfOrder, machine);
     sa.printResult();
 
-    Dishes::deleteDynamicArray();
+    //Dishes::deleteDynamicArray();
 }
