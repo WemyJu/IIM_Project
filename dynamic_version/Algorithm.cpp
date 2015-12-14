@@ -25,8 +25,8 @@ int Algorithm::getCompleteTime(){
 }
 
 void Algorithm::getResult(vector<Dishes> result){
-    cout << "-------------------------------------------------------------------\n";
-    cout << " No.  Dish Name  Table  Release  Machine  Start  Complete  Waiting \n";
+    cout << "----------------------------------------------------------------------------\n";
+    cout << " No.  Dish Name  Table  Release  Machine  Start  Process  Complete  Waiting \n";
     for(int i=0; i<num; i++)
         cout << " " << setw(3) << result[i].getNo()
             << setw(15) << result[i].getName()
@@ -34,7 +34,7 @@ void Algorithm::getResult(vector<Dishes> result){
             << setw(9) << result[i].getTimeR()
             << setw(9) << result[i].getMachineNo()
             << setw(7) << result[i].getTimeS()
-            //<< setw(9) << result[i].getTimeP()
+            << setw(9) << result[i].getTimeP()
             << setw(10) << result[i].getTimeC()
             << setw(9) << result[i].getTimeW() << endl;
     cout << "Total Waiting Time : " << totalWaiting << endl;

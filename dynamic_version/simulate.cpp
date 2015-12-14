@@ -25,7 +25,6 @@ int main(int argc, char *argv[]){
     bool fifoEnd(false), minProEnd(false), GAEnd(false); 
 
     Machine::setMachine(machine, numOfDish);
-   // Machine::printProcessing();
     Algorithm::initOrder(order, numOfOrder, numOfDish, argc, argv);
     sort(order.begin(), order.end(), timeRCmp);
     oriOrder = order;
@@ -71,5 +70,5 @@ int main(int argc, char *argv[]){
     sa.logic(numOfOrder, machine);
     sa.printResult();
 
-    //Dishes::deleteDynamicArray();
+    Dishes::deleteDynamicArray();
 }

@@ -39,6 +39,7 @@ class GA : public Algorithm{
         static bool firstComeCmp(Dishes, Dishes);
         static bool dishNoCmp(Dishes, Dishes);
         static bool TpCmp(Dishes, Dishes);
+        static bool machineCmp(Dishes, Dishes);
         void operator=(GA ga);
         void addOrder(Dishes);
         void findBest(int);
@@ -47,8 +48,6 @@ class GA : public Algorithm{
         bool checkSchedule(int);
         void printResult();
     private:
-        void crossOver(int, int);
-        void mutation(int);
         void crossOver();
         void mutation();
         void checkOrder(int, int);
@@ -56,10 +55,10 @@ class GA : public Algorithm{
         vector<Dishes> fifo(int, vector<Dishes>);
         vector<Dishes> minProcess(int, vector<Dishes>);
         int machine;
-        vector<Dishes> p[50];
+        vector<Dishes> p[40];
         vector<Dishes> c[1250];
         int *gaTimer;
-        int childNum, generation;
+        int childNum;
         const int MAXINT = 2147483647;
 };
 

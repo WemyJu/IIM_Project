@@ -19,7 +19,6 @@ class FIFO : public Algorithm{
         FIFO(int, int);
         ~FIFO();
         static bool firstComeCmp(Dishes, Dishes);
-        static bool tableNumCmp(Dishes, Dishes);
         void addOrder(int, Dishes);
         bool checkSchedule(int);
         vector<Dishes> getResult();

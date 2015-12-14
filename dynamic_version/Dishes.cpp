@@ -14,10 +14,10 @@ string* Dishes::dishName = NULL;
 // get functions
 void Dishes::deleteDynamicArray(){
     for(int i=0; i<machine; i++)
-        delete [] Tp[i];
-    delete [] Tp;
+        delete[] Tp[i];
+    delete[] Tp;
 
-    delete [] dishName;
+    delete[] dishName;
 }
 
 int Dishes::getMachine(){

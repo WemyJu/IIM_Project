@@ -30,8 +30,8 @@ MinProcessingTime::MinProcessingTime(int m, int n){
 }
 
 MinProcessingTime::~MinProcessingTime(){
-    delete [] timer;
-    delete [] dealed;
+    delete[] timer;
+    delete[] dealed;
 }
 
 bool MinProcessingTime::TpCmp(Dishes a, Dishes b){
