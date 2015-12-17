@@ -1,7 +1,7 @@
 #include "SA.h"
 #include <fstream>
-using namespace std;
 
+using namespace std;
 
 SA::SA(vector<Dishes> SA_dishes,int n,int m){
     order=SA_dishes;
@@ -25,29 +25,20 @@ SA::SA(vector<Dishes> SA_dishes,int n,int m){
             SA_totalWaiting += SA_vector[i][j].getTimeW();
 }
 
-void SA::logic( int num , int machine)
-{
-    while(loop <= 10){
+void SA::logic( int num , int machine){
+    while(loop < 10){
         perturbation();
-        acceptance();}
-}
-
-void SA::compareTW (int &SAT, int &MAT)
-{
-    if( MAT > SAT)
-    {
-        SAT = MAT;
+        acceptance();
     }
 }
 
 bool SA::SA_order(Dishes a,Dishes b){
-    if(a.getMachineNo()!=b.getMachineNo()){
+    if(a.getMachineNo()!=b.getMachineNo())
         return a.getMachineNo() < b.getMachineNo();
-    }
-    else{
+    else
         return a.getTimeR() < b.getTimeR();
-    }
 }
+
 
 bool SA::TrCmp(Dishes a, Dishes b){
     if(a.getTimeR() != b.getTimeR())
@@ -55,6 +46,18 @@ bool SA::TrCmp(Dishes a, Dishes b){
     else
         return a.getTimeP() < b.getTimeP();
 }
+
+void SA::compareTW(int &SAT, int &MAT){
+    if( MAT > SAT)
+        SAT = MAT;
+}
+
+bool SA::checkSchedule(int clock){
+    vector<Dishes>::iterator it;
+    for(int i=1; i<=machine; i++);
+        
+}
+
 
 void SA:: perturbation(){
     vector<Dishes> temp;
@@ -90,16 +93,15 @@ void SA:: perturbation(){
 void SA::swap(int i1 , int j1, int i2, int j2){
     Dishes hold = SA_newVector[i1][j1];
     SA_newVector[i1][j1] = SA_newVector[i2][j2];
-    SA_newVector[i2][j2] = hold;}
+    SA_newVector[i2][j2] = hold;
+}
 
 void SA:: updatingVector(){
     SA_NewWaiting=0;
     
-    for(int i=0;i<machine;i++){
-        for(int j=0;j<SA_newVector[i].size();j++){
+    for(int i=0;i<machine;i++)
+        for(int j=0;j<SA_newVector[i].size();j++)
             SA_NewWaiting+=SA_newVector[i][j].getTimeW();
-        }
-    }
 }
 
 void SA::acceptance()

@@ -77,8 +77,6 @@ void GA::addOrder(Dishes newDish){
 void GA::findBest(int clock){
     int localWaiting(MAXINT), TwBestChoice(-1);
     int *tempTimer = new int [machine+1];
-    CHILDINFO childInfo;
-    priority_queue< CHILDINFO, vector<CHILDINFO>, chooseGenerations > childTw;
 
     cout << "in find Best\n";
 
@@ -93,18 +91,14 @@ void GA::findBest(int clock){
             m = c[i][j].getMachineNo();
             if(tempTimer[m]<c[i][j].getTimeR())
                 tempTimer[m] = c[i][j].getTimeR();
+            c[i][j].setTimeP(c[i][j].getDishNo(), m);
             Tw += tempTimer[m] + c[i][j].getTimeP() - c[i][j].getTimeR();
             tempTimer[m] += c[i][j].getTimeP();
         }
 
-        if(c[i].size() > 0){
-            childInfo.Tw = Tw;
-            childInfo.index = i;
-            childTw.push(childInfo);
-            if(Tw < localWaiting){
+        if(c[i].size() > 0 && Tw < localWaiting){
                 TwBestChoice = i;
                 localWaiting = Tw;
-            }
         }
     }
 
@@ -113,6 +107,7 @@ void GA::findBest(int clock){
 }
 
 void GA::findBetter(int clock){
+    cout << "in findBetter\n";
     int *tempTimer = new int [machine+1];
     CHILDINFO childInfo;
     priority_queue< CHILDINFO, vector<CHILDINFO>, chooseGenerations > childTw;
@@ -122,20 +117,23 @@ void GA::findBetter(int clock){
             tempTimer[m] = gaTimer[m];
         int k(0), Tw(0);
         int m;
+ //       cout << "a\n";
         for(int j=0; j<c[i].size(); j++){
+   //         cout << "b\n";
             m = c[i][j].getMachineNo();
+     //       cout << "m=" << m << endl;
             if(tempTimer[m]<c[i][j].getTimeR())
                 tempTimer[m] = c[i][j].getTimeR();
+            c[i][j].setTimeP(c[i][j].getDishNo(), m);
             Tw += tempTimer[m] + c[i][j].getTimeP() - c[i][j].getTimeR();
-
             tempTimer[m] += c[i][j].getTimeP();
         }
-
+//        cout << "c\n";
         if(c[i].size() > 0){
+  //          cout << "d\n";
             childInfo.Tw = Tw;
             childInfo.index = i;
             childTw.push(childInfo);
-
         }
     }
 
@@ -172,11 +170,9 @@ void GA::generateChild(int clock){
             }
         }
     } 
-    for(int i=0; i<35; i++)
-        sort(p[i].begin(), p[i].end(), initSort);
     crossOver();
     mutation();
-    for(int i=0; i<10; i++){
+    for(int i=0; i<100; i++){
         findBetter(clock);
         crossOver();
         mutation();
@@ -194,7 +190,7 @@ bool GA::checkSchedule(int clock){
                         match = true;
                         Dishes dish = (*it);
                         dish.setTimeS(clock);
-                        dish.setTimeP(dish.getDishNo(), i);
+                        //dish.setTimeP(dish.getDishNo(), i);
                         dish.setTimeC(dish.getTimeS()+dish.getTimeP());
                         dish.setTimeW(dish.getTimeC()-dish.getTimeR());
                         gaTimer[i]=dish.getTimeC();
@@ -222,12 +218,25 @@ void GA::crossOver(){
     bool *dealed = new bool [num+1];
     int index, usedNum(0), pastMachine(1);
 
-    cout << "in crossOver\n";
+    for(int i=0; i<35; i++){
+        cout << i << " : " ;
+        for(int j=0; j<p[i].size(); j++)
+            cout << p[i][j].getNo() << "_" << p[i][j].getMachineNo() << " ";
+        cout << endl;
+        sort(p[i].begin(), p[i].end(), initSort);
+        cout << i << " : " ;
+        for(int j=0; j<p[i].size(); j++)
+            cout << p[i][j].getNo() << "_" << p[i][j].getMachineNo() << " ";
+        cout << endl;
+    }
+   // cout << "in crossOver\n";
     for(int p1=0; p1<35; p1++){
         for(int p2=0; p2<35; p2++){
             index = p1*35+p2;
-            if(p1 == p2)
+            //cout << "index = "<<index << endl;
+            if(p1 == p2){
                 c[index] = p[p1];
+            }
             else{
                 usedNum = 0;
                 pastMachine = 1;
@@ -236,7 +245,8 @@ void GA::crossOver(){
 
                 for(int i=0; i<p[p2].size(); i++){
                     if(p[p2][i].getMachineNo() == machine){
-                        c[index].push_back(p[p2][i]);
+                        Dishes dish = p[p2][i];
+                        c[index].push_back(dish);
                         dealed[p[p2][i].getNo()] = true;
                     }
                 }
@@ -244,7 +254,8 @@ void GA::crossOver(){
                 for(int i=0; i<p[p1].size(); i++){
                     if(p[p1][i].getMachineNo()==pastMachine){
                         if(!dealed[p[p1][i].getNo()]){
-                            it = c[index].insert(it, p[p1][i]);
+                            Dishes dish = p[p1][i];
+                            it = c[index].insert(it, dish);
                             it++;
                             dealed[p[p1][i].getNo()] = true;
                         }
@@ -255,10 +266,28 @@ void GA::crossOver(){
                         if(!dealed[p[p1][i].getNo()]){
                             if(usedNum>0)
                                 usedNum--;
-                            else
+                            else{
                                 pastMachine++;
-                            p[p1][i].setMachineNo(pastMachine);
-                            it = c[index].insert(it, p[p1][i]);
+                                if(pastMachine>2){
+                                    cout << "pastMachine = " << pastMachine << endl;
+                                    cout << "p1 = " << p1 << endl;
+                                    cout << "p2 = " << p2 << endl;
+                                    cout << "size = " << p[p1].size() <<endl;
+                                    for(int l=0; l<p[p2].size(); l++)
+                                        cout << p[p2][l].getNo() << "_" << p[p2][l].getMachineNo() << " , ";
+                                    cout << endl;
+                                    for(int l = 0; l<p[p1].size(); l++){
+                                        cout << p[p1][l].getNo() << "_" << p[p1][l].getMachineNo() << " , ";
+                                        usleep(5000);
+                                    }
+                                    cout << "\n";
+                                    cout << "now = " << i << endl;
+                                    usleep(3000);
+                                }
+                            }
+                            Dishes dish = p[p1][i];
+                            dish.setMachineNo(pastMachine);
+                            it = c[index].insert(it, dish);
                             it++;
                             dealed[p[p1][i].getNo()] = true;
                         }
@@ -269,38 +298,26 @@ void GA::crossOver(){
             }
         }
     }
-    delete[] dealed;
+//    cout << "after crossOver\n";
+    delete [] dealed;
+  //  cout << "after dealed\n";
 }
 
 void GA::mutation(){
     int index;
-
     for(int p1=0; p1<35; p1++)
         for(int p2=0; p2<35; p2++){
             index = p1*35+p2;
             if(c[index].size()!=0){
                 for(int i=0; i<c[index].size()/3; i++){
-                int change = rand()%100+1;
+                int change = rand()%101;
                 int first = rand()%c[index].size();
                 int second = rand()%c[index].size();
-                if(change<70 && first!=second)
+                if(change<30 && first!=second)
                     swap(first, second, index);
                 }
             }
         }
-}
-
-void GA::checkOrder(int clock, int index){
-    int machineNo(1);
-
-    for(int i=1; i<c[index].size(); i++){
-        if(c[index][i].getMachineNo() == machineNo && c[index][i-1].getMachineNo() == machineNo){
-            if(c[index][i].getTimeR() > clock && c[index][i].getTimeR() > c[index][i-1].getTimeR())
-                swap(i, i-1, index);
-        }
-        else
-            machineNo++;
-    }
 }
 
 void GA::swap(int first, int second, int index){

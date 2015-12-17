@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <queue>
+#include <unistd.h>
 #include "Algorithm.h"
 
 using namespace std;
@@ -50,7 +51,6 @@ class GA : public Algorithm{
     private:
         void crossOver();
         void mutation();
-        void checkOrder(int, int);
         void swap(int, int, int);
         vector<Dishes> fifo(int, vector<Dishes>);
         vector<Dishes> minProcess(int, vector<Dishes>);
