@@ -12,21 +12,26 @@ using namespace std;
 class SA : public Algorithm
 {
 	public:
-		SA(vector<Dishes> , int , int );
+		SA(int , int );
 		bool static SA_order(Dishes ,Dishes );
         bool static TrCmp(Dishes, Dishes);
+        bool static dishNoCmp(Dishes, Dishes);
+        bool static TpCmp(Dishes, Dishes);
 		void compareTW(int& , int&);
         bool checkSchedule(int);
         void addOrder(Dishes);
-		void logic(int ,int );
-		void perturbation();
+        void resetOrder();
+        void resetSAVector(int);
+		void logic(int);
 		void updatingVector();
 		void acceptance();
 		void printResult();
 	private:
-		void swap(int ,int ,int ,int );
-        void countScheduleResult();
-		int clock, machine;
+		void swap(int ,int ,int ,int);
+		void perturbation(int);
+        void countScheduleResult(int);
+        void minProcess(int);
+		int machine;
 		int SA_totalWaiting;
 		int MA_totalWaiting;
 		vector<vector<Dishes> > SA_vector;

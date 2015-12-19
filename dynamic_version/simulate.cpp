@@ -22,7 +22,7 @@ bool timeRCmp(Dishes a, Dishes b){
 int main(int argc, char *argv[]){
     vector<Dishes> order, oriOrder;
     int numOfOrder(0), machine(0), clock(0), numOfDish(0);
-    bool fifoEnd(false), minProEnd(false), GAEnd(false); 
+    bool fifoEnd(false), minProEnd(false), GAEnd(false), SAEnd(false); 
 
     Machine::setMachine(machine, numOfDish);
     Algorithm::initOrder(order, numOfOrder, numOfDish, argc, argv);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     fifo.printResult();
     minPro.printResult();
 
-    GA ga(machine, numOfOrder);
+   /* GA ga(machine, numOfOrder);
     order = oriOrder;
     clock = 0;
     bool addDish = false;
@@ -64,10 +64,29 @@ int main(int argc, char *argv[]){
         GAEnd = ga.checkSchedule(clock);
         clock++;
     }
-    ga.printResult();
+    ga.printResult();*/
    
-    SA sa(minPro.getScheduleResult(), numOfOrder, machine);
-    sa.logic(numOfOrder, machine);
+    SA sa(machine, numOfOrder);
+    order = oriOrder;
+    clock = 0;
+    bool addDish = false;
+    while(!SAEnd || !order.empty()){
+        while(clock >= order.begin()->getTimeR() && !order.empty()){
+            if(!addDish)
+                sa.resetOrder();
+            Dishes dish = *(order.begin());
+            sa.addOrder(dish);
+            order.erase(order.begin());
+            addDish = true;
+        }
+        if(addDish){
+            sa.resetSAVector(clock);
+            sa.logic(clock);
+            addDish = false;
+        }
+        SAEnd = sa.checkSchedule(clock);
+        clock++;
+    }
     sa.printResult();
 
     Dishes::deleteDynamicArray();
