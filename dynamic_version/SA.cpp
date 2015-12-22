@@ -15,7 +15,7 @@ SA::SA(int m, int n){
     num = n;
     machine = m;
     k = 1;
-    T=9999;
+    T = oriTemperate = 3000;
     loop=0;
     SA_totalWaiting = 2147483647; // INT MAX
     totalWaiting = 0;
@@ -31,10 +31,12 @@ SA::SA(int m, int n){
 }
 
 void SA::logic(int clock){
-    while(loop<100 &&  T<100){
+    while(loop<1000 &&  T>10){
         perturbation(clock);
         acceptance();
     }
+    loop = 0;
+    T = oriTemperate;
 }
 
 bool SA::SA_order(Dishes a,Dishes b){
@@ -264,7 +266,6 @@ void SA::minProcess(int clock){
         for(int j=1; j<=machine; j++){
             if(machineTpOrder[j][i].getMachineNo() > 0 && machineTpOrder[j][i].getMachineNo() <= machine){
                 order[i] = machineTpOrder[j][i];
-                //break;
             }
         }
     delete[] dealed;

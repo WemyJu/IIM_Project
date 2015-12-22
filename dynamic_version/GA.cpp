@@ -95,8 +95,8 @@ void GA::findBest(int clock){
         }
 
         if(c[i].size() > 0 && Tw < localWaiting){
-                TwBestChoice = i;
-                localWaiting = Tw;
+            TwBestChoice = i;
+            localWaiting = Tw;
         }
     }
 
@@ -130,7 +130,7 @@ void GA::findBetter(int clock){
         }
     }
 
-    cout << "waiting time = " << childTw.top().Tw << " " << childTw.top().index <<  endl;
+    //cout << "waiting time = " << childTw.top().Tw << " " << childTw.top().index <<  endl;
     for(int i=0; i<childTw.size(); i++){
         childInfo = childTw.top();
         p[i] = c[childInfo.index];
@@ -150,8 +150,8 @@ void GA::generateChild(int clock){
         p[i] = p[1];
     for(int i=2; i<35; i++){
         for(int j=0; j<p[i].size(); j++){
-            //int first = rand()%p[i].size();
-            int first = j;
+            int first = rand()%p[i].size();
+            //int first = j;
             int second = rand()%p[i].size();
             if(first != second){
                 Dishes temp = p[i][first];
@@ -272,12 +272,12 @@ void GA::mutation(){
         for(int p2=0; p2<35; p2++){
             index = p1*35+p2;
             if(c[index].size()!=0){
-                for(int i=0; i<c[index].size()/3; i++){
-                int change = rand()%101;
-                int first = rand()%c[index].size();
-                int second = rand()%c[index].size();
-                if(change<30 && first!=second)
-                    swap(first, second, index);
+                for(int i=0; i<1; i++){
+                    int change = rand()%101;
+                    int first = rand()%c[index].size();
+                    int second = rand()%c[index].size();
+                    if(change<40 && first!=second)
+                        swap(first, second, index);
                 }
             }
         }

@@ -58,7 +58,7 @@ bool MinProcessingTime::DishNoCmp(Dishes a, Dishes b){
 void MinProcessingTime::addOrder(int timer, Dishes newDish){
     for(int i=1; i<=machine; i++){
         newDish.setTimeP(newDish.getDishNo(), i);
-        machineTpOrder[i].insert(machineTpOrder[i].end(), newDish); 
+        machineTpOrder[i].insert(machineTpOrder[i].end(), newDish);
         sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), TpCmp);
     }
 }
@@ -67,8 +67,8 @@ bool MinProcessingTime::checkSchedule(int clock){
     if(result.size()==num)
         return true;
     for(int i=1; i<=machine; i++){
+        sort(machineTpOrder[i].begin(), machineTpOrder[i].end(), TpCmp);
         if(clock >= timer[i]){
-            bool deal(false);
             if(!machineTpOrder[i].empty()){
                 for(int j=0; j<machineTpOrder[i].size(); j++){
                     if(!dealed[machineTpOrder[i][j].getNo()]){
@@ -78,21 +78,19 @@ bool MinProcessingTime::checkSchedule(int clock){
                             machineTpOrder[i][j].setTimeS(clock);
                             machineTpOrder[i][j].setTimeC(machineTpOrder[i][j].getTimeS()+machineTpOrder[i][j].getTimeP());
                             machineTpOrder[i][j].setTimeW(machineTpOrder[i][j].getTimeC() - machineTpOrder[i][j].getTimeR());
-                            timer[i]+=machineTpOrder[i][j].getTimeP();
+                            timer[i] = machineTpOrder[i][j].getTimeC();
                             totalWaiting += machineTpOrder[i][j].getTimeW();
-                            deal = true;
                             result.insert(result.end(), machineTpOrder[i][j]);
                             break;
                         }
                     }
                     else{
                         vector<Dishes>::iterator it = machineTpOrder[i].begin()+j;
+                        j--;
                         machineTpOrder[i].erase(it);
                     }
                 }
             }
-            if(!deal)
-                timer[i]++;
         }
     }
     for(int i=1; i<=machine; i++)

@@ -36,7 +36,7 @@ class SA : public Algorithm
 		int MA_totalWaiting;
 		vector<vector<Dishes> > SA_vector;
 	    vector<vector<Dishes> > SA_newVector;
-	    int SA_NewWaiting, k, T, loop;
+	    int SA_NewWaiting, k, T, loop, oriTemperate;
         int *timer;
 };
 #endif

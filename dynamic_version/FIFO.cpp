@@ -22,7 +22,10 @@ FIFO::~FIFO(){
 }
 
 bool FIFO::firstComeCmp(Dishes a, Dishes b){
-    return a.getTimeR() < b.getTimeR();
+    if(a.getTimeR() != b.getTimeR())
+        return a.getTimeR() < b.getTimeR();
+    else
+        return a.getNo() < b.getNo();
 }
 
 void FIFO::addOrder(int timer, Dishes newDish){
