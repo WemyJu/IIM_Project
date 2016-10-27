@@ -6,8 +6,49 @@
 
 #include "Algorithm.h"
 
-void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
+string* Algorithm::dishName = NULL;
+
+void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int d, int argc, char *argv[]){
+
+    if(argc>1)
+        ordering = readOrders(n, argc, argv);
+    else
+        ordering = produceOrders(n, d);
+}
+
+int Algorithm::getTotalWaiting(){
+    return totalWaiting;
+}
+
+int Algorithm::getCompleteTime(){
+    return completeTime;
+}
+
+void Algorithm::getResult(vector<Dishes> result){
+    cout << "----------------------------------------------------------------------------\n";
+    cout << " No.  Dish Name  Table  Release  Machine  Start  Process  Complete  Waiting \n";
+    for(int i=0; i<num; i++)
+        cout << " " << setw(3) << result[i].getNo()
+            << setw(15) << result[i].getName()
+            << setw(7) << result[i].getTable()
+            << setw(9) << result[i].getTimeR()
+            << setw(9) << result[i].getMachineNo()
+            << setw(7) << result[i].getTimeS()
+            << setw(9) << result[i].getTimeP()
+            << setw(10) << result[i].getTimeC()
+            << setw(9) << result[i].getTimeW() << endl;
+    cout << "Total Waiting Time : " << totalWaiting << endl;
+    cout << "Average Waiting Time : " << totalWaiting/num << endl;
+    cout << endl << endl;
+}
+
+vector<Dishes> Algorithm::getScheduleResult(){
+    return result;
+}
+
+vector<Dishes> Algorithm::produceOrders(int& n, int d){
     int nextTime(0), order_num(0);
+    vector<Dishes> ordering;
     srand(time(NULL));
     n = rand()%10+50;
 
@@ -19,22 +60,19 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
     int Tr(0), table(1);
     Dishes dish;
     for(int i=0; i<n; table++){
-        do 
+        do
             order_num = (int)normal_dis(generator);
         while(order_num <= 0);
         //Tr += possion_dis(generator);
-        do 
+        do
             Tr = normal_dis2(generator);
         while(Tr<0);
 
         for(int j=0; j<order_num; j++, i++){
             //Dishes *dish = new Dishes;
             int dishNum = rand()%d+1;
-            char a='0'+dishNum;
-            string name = "Dish No.";
-            name += a;
-            dish.setName(name);
             dish.setDishNo(dishNum);
+            dish.setName(Dishes::getDishName(dishNum));
             dish.setTimeR(Tr);
             //dish.setTimeR(0);
             dish.setNo(i+1);
@@ -44,29 +82,35 @@ void Algorithm::initOrder(vector<Dishes>& ordering, int& n, int& d){
         if(i>n)
             n=i;
     }
+    return ordering; 
 }
 
-int Algorithm::getTotalWaiting(){
-    return totalWaiting;
-}
+vector<Dishes> Algorithm::readOrders(int &n, int argc, char* argv[]){
+    vector<Dishes> ordering;
+    fstream fp;
+    fp.open(argv[1], ios::in);
+    int orderNum(1), no(1), Tr;
+    string allOrders, name, temp;
 
-int Algorithm::getCompleteTime(){
-    return completeTime;
-}
+    fp >> orderNum;
+    getline(fp, temp);
+    for(int i=1; i<=orderNum; i++){
+        fp >> Tr;
+        getline(fp, temp);
+        getline(fp, allOrders);
+        stringstream ss(allOrders);
+        while (ss >> name){
+            Dishes dish;
+            dish.setTimeR(Tr);
+            dish.setNo(no++);
+            dish.setTable(i);
+            dish.setName(name);
+            dish.setDishNo(Dishes::getDishIndex(name));
+            ordering.push_back(dish);
+        }
+    }
+    n = no-1;
+    fp.close();
 
-void Algorithm::getResult(vector<Dishes> order){
-    cout << "-----------------------------------------------------------------\n";
-    cout << " No.  Table  Release  Machine  Start  Process  Complete  Waiting \n";
-    for(int i=0; i<num; i++)
-        cout << " " << setw(3) << order[i].getNo()
-             << setw(7) << order[i].getTable()
-             << setw(9) << order[i].getTimeR()
-             << setw(9) << order[i].getMachineNo()
-             << setw(7) << order[i].getTimeS()
-             << setw(9) << order[i].getTimeP()
-             << setw(10) << order[i].getTimeC()
-             << setw(9) << order[i].getTimeW() << endl;
-    cout << "Total Waiting Time : " << totalWaiting << endl;
-    cout << "Complete Time : " << completeTime << endl;
-    cout << endl << endl;
+    return ordering;
 }

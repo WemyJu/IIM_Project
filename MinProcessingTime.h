@@ -14,18 +14,21 @@
 
 using namespace std;
 
-class MinProcessingTime : Algorithm{
+class MinProcessingTime : public Algorithm{
     public:
-        MinProcessingTime(vector<Dishes>, int, int);
+        MinProcessingTime(int, int);
         ~MinProcessingTime();
         static bool TpCmp(Dishes, Dishes);
         static bool TsCmp(Dishes, Dishes);
         static bool DishNoCmp(Dishes, Dishes);
-        vector<Dishes> setOrder();
+        void addOrder(int, Dishes);
+        bool checkSchedule(int);
         void printResult();
     private:
+        vector<vector<Dishes>> machineTpOrder;
         int machine, clock;
         int *timer;
+        bool *dealed;
 };
 
 #endif

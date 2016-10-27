@@ -13,9 +13,19 @@ void Machine::setMachine(int &machine, int &dish){
     fstream fp;
     int Tp;
     int **Tps;
+    string* names;
 
-    fp.open("ProcessingTime.txt", ios::in);
+    //fp.open("ProcessingTime.txt", ios::in);
+    fp.open("FireMeal.txt", ios::in);
+    //fp.open("test.txt", ios::in);
+    //fp.open("data12.txt", ios::in);
     fp >> machineNum >> dishNum;
+
+    names = new string [dishNum+1];
+    for(int i=1; i<=dishNum; i++){
+        fp >> names[i];
+    }
+    
     Tps = new int*[machineNum];
     for(int i=0; i<machineNum; i++){
         Tps[i] = new int[dishNum];
@@ -23,21 +33,12 @@ void Machine::setMachine(int &machine, int &dish){
             fp >> Tps[i][j];
     }
 
+    fp.close();
     machine = machineNum;
     dish = dishNum;
+
     Dishes::setMachine(machineNum);
+    Dishes::setDish(dishNum);
     Dishes::setProcessingTime(Tps);
-    tempTp = Tps;
+    Dishes::setDishName(names);
 }
-
-void Machine::printProcessing(){
-    cout << "in machine, num = "<< machineNum << " " << dishNum << "\n";
-    for(int i=0; i<3 ;i++){
-        for(int j=0; j<3; j++)
-            cout << tempTp[i][j] << " ";
-        cout << endl;
-    }
-}
-
-int **Machine::tempTp = NULL;
-

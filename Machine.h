@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "Dishes.h"
 
 using namespace std;
@@ -16,10 +17,8 @@ using namespace std;
 class Machine{
     public:
         static void setMachine(int&, int&);
-        static void printProcessing();
     private:
         int static machineNum, dishNum;
-        int static **tempTp;
 };
 
 #endif
